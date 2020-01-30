@@ -12,8 +12,8 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>800</width>
-    <height>600</height>
+    <width>900</width>
+    <height>650</height>
    </size>
   </property>
   <property name="maximumSize">
@@ -32,10 +32,25 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
+   <property name="minimumSize">
+    <size>
+     <width>800</width>
+     <height>600</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>1920</width>
+     <height>1080</height>
+    </size>
+   </property>
    <property name="autoFillBackground">
     <bool>true</bool>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_2">
+   <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="4,1">
+    <property name="spacing">
+     <number>7</number>
+    </property>
     <property name="leftMargin">
      <number>5</number>
     </property>
@@ -50,6 +65,12 @@
     </property>
     <item>
      <widget class="QTabWidget" name="tabWidget">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="currentIndex">
        <number>1</number>
       </property>
@@ -68,7 +89,7 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout">
       <property name="spacing">
-       <number>3</number>
+       <number>0</number>
       </property>
       <item>
        <widget class="QLabel" name="label">
@@ -128,119 +149,141 @@
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
-          <widget class="QWidget" name="EasyModeWidget" native="true">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_4">
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_4">
-              <item>
-               <widget class="QLabel" name="label_4">
-                <property name="font">
-                 <font>
-                  <family>Times New Roman</family>
-                  <pointsize>12</pointsize>
-                 </font>
-                </property>
+          <layout class="QVBoxLayout" name="AdvancedLayout">
+           <item>
+            <layout class="QGridLayout" name="LayerCounter">
+             <item row="1" column="0">
+              <widget class="QLabel" name="LayerCountLabel">
+               <property name="font">
+                <font>
+                 <family>Times New Roman</family>
+                 <pointsize>12</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>Количество слоев в нейронной сети:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QLineEdit" name="LayerCountLineEdit"/>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QWidget" name="AdvancedModeWidget" native="true">
+             <layout class="QGridLayout" name="gridLayout">
+              <item row="2" column="3">
+               <widget class="QComboBox" name="comboBox">
+                <item>
+                 <property name="text">
+                  <string>RELU</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Sigmoid</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>ELU</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Tangh</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Softmax</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item row="1" column="3">
+               <widget class="QSpinBox" name="spinBox"/>
+              </item>
+              <item row="1" column="1">
+               <widget class="QLabel" name="label_2">
                 <property name="text">
-                 <string>Количество слоев в нейронной сети:</string>
+                 <string>Количество нейронов в 1 слое:</string>
                 </property>
                </widget>
               </item>
-              <item>
-               <widget class="QLineEdit" name="lineEdit_3"/>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
-          <widget class="QWidget" name="AdvancedModeWidget" native="true">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_3">
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_3">
-              <item>
-               <widget class="QLabel" name="LayerCountLabel">
-                <property name="font">
-                 <font>
-                  <family>Times New Roman</family>
-                  <pointsize>12</pointsize>
-                 </font>
-                </property>
+              <item row="2" column="1">
+               <widget class="QLabel" name="label_3">
                 <property name="text">
-                 <string>Количество слоев в нейронной сети:</string>
+                 <string>Функция активации: </string>
                 </property>
                </widget>
               </item>
-              <item>
-               <widget class="QLineEdit" name="LayerCountLineEdit"/>
+              <item row="3" column="1">
+               <widget class="QLabel" name="label_5">
+                <property name="text">
+                 <string>Метод инициализации весов</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="3">
+               <widget class="QComboBox" name="comboBox_2">
+                <item>
+                 <property name="text">
+                  <string>Zeros</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Ones</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>RandomNormal</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>RandomUniform</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>TruncatedNormal</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Lecun_uniform</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>He_normal</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Lecun_normal</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>He_uniform</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>SVD</string>
+                 </property>
+                </item>
+               </widget>
               </item>
              </layout>
-            </item>
-            <item>
-             <widget class="QWidget" name="widget" native="true">
-              <layout class="QGridLayout" name="gridLayout">
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_2">
-                 <property name="text">
-                  <string>Количество нейронов в 1 слое:</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QSpinBox" name="spinBox"/>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="label_3">
-                 <property name="text">
-                  <string>Функция активации: </string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QComboBox" name="comboBox">
-                 <item>
-                  <property name="text">
-                   <string>RELU</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>Sigmoid</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>ELU</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>Tangh</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>Softmax</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>SVD</string>
-                  </property>
-                 </item>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-           </layout>
-          </widget>
+            </widget>
+           </item>
+          </layout>
          </item>
         </layout>
        </widget>
@@ -257,6 +300,71 @@
          </size>
         </property>
        </spacer>
+      </item>
+      <item>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <property name="sizeConstraint">
+         <enum>QLayout::SetDefaultConstraint</enum>
+        </property>
+        <property name="spacing">
+         <number>10</number>
+        </property>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_4">
+          <property name="font">
+           <font>
+            <family>Times New Roman</family>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Количество эпох обучения:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QSpinBox" name="spinBox_2">
+          <property name="minimumSize">
+           <size>
+            <width>245</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>100</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QPushButton" name="pushButton">
+          <property name="maximumSize">
+           <size>
+            <width>150</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Сбросить</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QPushButton" name="pushButton_2">
+          <property name="maximumSize">
+           <size>
+            <width>150</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Начать</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </item>
@@ -319,28 +427,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>519</x>
-     <y>89</y>
+     <x>517</x>
+     <y>81</y>
     </hint>
     <hint type="destinationlabel">
-     <x>524</x>
-     <y>183</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radioButton_2</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>EasyModeWidget</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>550</x>
-     <y>62</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>557</x>
-     <y>115</y>
+     <x>527</x>
+     <y>178</y>
     </hint>
    </hints>
   </connection>
