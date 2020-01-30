@@ -78,6 +78,9 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.AdvancedLayout = QtWidgets.QVBoxLayout()
         self.AdvancedLayout.setObjectName("AdvancedLayout")
+        #TODO
+        self.AdvancedLayout.setVisible
+        #TODO
         self.LayerCounter = QtWidgets.QGridLayout()
         self.LayerCounter.setObjectName("LayerCounter")
         self.LayerCountLabel = QtWidgets.QLabel(self.frame)
