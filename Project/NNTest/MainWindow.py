@@ -208,7 +208,7 @@ class Ui_MainWindow(object):
         self.comboBox.setItemText(0, _translate("MainWindow", "RELU"))
         self.comboBox.setItemText(1, _translate("MainWindow", "Sigmoid"))
         self.comboBox.setItemText(2, _translate("MainWindow", "ELU"))
-        self.comboBox.setItemText(3, _translate("MainWindow", "Tangh"))
+        self.comboBox.setItemText(3, _translate("MainWindow", "Tanh"))
         self.comboBox.setItemText(4, _translate("MainWindow", "Softmax"))
         self.label_2.setText(_translate("MainWindow", "Количество нейронов в 1 слое:"))
         self.label_3.setText(_translate("MainWindow", "Функция активации: "))

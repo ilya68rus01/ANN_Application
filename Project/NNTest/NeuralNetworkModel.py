@@ -5,6 +5,7 @@ import tensorflow as tf
 from tensorflow import keras
 
 class NeuralNetworkModel:
+
     #Собственная функция для инициализации весов
     def SVD(self,shape,dtype = None):
         # Не знаю пока как реализовать правильно, но тут я создаю массивы для каждого из классов,
@@ -46,11 +47,33 @@ class NeuralNetworkModel:
     def __init__(self,inputArray,realClass,layer_count, neuron_counter=[1], activation_function=["sigmoid"], kernel_init=["random_uniform"]):
         self.inputArray = inputArray
         self.realClass = realClass
+        self.activation_enum = {
+            'relu': keras.activations.relu,
+            'softmax': keras.activations.softmax,
+            'elu': keras.activations.elu,
+            'sigmoid': keras.activations.sigmoid,
+            'tanh': keras.activations.tanh,
+            '': None
+        }
+        self.init_enum = {
+            'zeros': keras.initializers.Zeros,
+            'ones': keras.initializers.Ones,
+            'randomNormal': keras.initializers.RandomNormal,
+            'randomUniform': keras.initializers.RandomUniform,
+            'truncatedNormal': keras.initializers.TruncatedNormal,
+            'lecun_uniform':keras.initializers.lecun_uniform,
+            'lecun_normal':keras.initializers.lecun_normal,
+            'he_normal':'he_normal',
+            'he_uniform':keras.initializers.he_uniform,
+            'SVD':self.SVD,
+            '': None
+        }
         self.__setLayer_count__(layer_count)
         self.__setNeuron_counter__(neuron_counter)
         self.__setKernel_init__(kernel_init)
         self.__setActivationFunc__(activation_function)
         self.model = keras.models.Sequential()
+
     def __setLayer_count__(self, layer_count):
         if layer_count>0 :
             self.layer_count=layer_count
@@ -66,18 +89,27 @@ class NeuralNetworkModel:
             print("Error value.")
     def __setKernel_init__(self, kernel_init):
         kernel = np.array(kernel_init,dtype=str)
-        if kernel.size == self.layer_count:
-            self.kernel_init=kernel
-        else:
-            #TODO Реализовать некоректный ввод ядра
-            print("Error value.")
+        self.kernel_init = []
+        for init in kernel:
+            try:
+                self.kernel_init.append(self.init_enum[init])
+            except KeyError as e:
+                # можно также присвоить значение по умолчанию вместо бросания исключения
+                raise ValueError('Undefined unit: {}'.format(e.args[0]))
     def __setActivationFunc__(self,activation_function):
         func_array = np.array(activation_function,dtype=str)
-        if func_array.size == self.layer_count :
-            self.activation_function = func_array
-        else:
-            #TODO
-            print("Error value")
+        self.activation_function=[]
+        for func in func_array:
+            try:
+                self.activation_function.append(self.activation_enum[func])
+            except KeyError as e:
+                # можно также присвоить значение по умолчанию вместо бросания исключения
+                raise ValueError('Undefined unit: {}'.format(e.args[0]))
+        # if func_array.size == self.layer_count :
+        #     self.activation_function = func_array
+        # else:
+        #     #TODO
+        #     print("Error value")
     def __setEpochs__(self, epoch):
         if epoch > 0:
             self.epochs = epoch
@@ -102,20 +134,12 @@ class NeuralNetworkModel:
 
     # Метод для обучения нейронки
     def trainNeuralNetwork(self):
-        # Плохой вариант реализации добавдения первого слоя 
+        # Плохой вариант реализации добавдения первого слоя
+        #activation=[None,keras.activations.relu,keras.activations.softmax]
         i = 1
         self.model.add(keras.layers.Input(self.inputArray.shape[1])) # вот это клевый будет вариант, если не задано количество входных нейронов
         while i != self.layer_count :
-            # Еще один плохой вариант определения инициализатора весов
-            # основная сложность в том что метод который задается в kernel_initializer не должен иметь атрибутов PS kernel_initializer=self.my_init
-            if self.kernel_init[i] != "SVD" :
-                self.model.add(keras.layers.Dense(self.neuron_counter[i],
-                                                  activation=self.activation_function[i],
-                                                  kernel_initializer=self.kernel_init[i]))
-            elif self.kernel_init[i] == "SVD" :
-                self.model.add(keras.layers.Dense(self.neuron_counter[i],
-                                                  activation=self.activation_function[i],
-                                                  kernel_initializer=self.SVD))
+            self.model.add(keras.layers.Dense(self.neuron_counter[i],activation=self.activation_function[i],kernel_initializer=self.kernel_init[i]))
             i=i+1
         # Незнаю тут врядли можно что придумать просто задаю значения параметров по факту
         self.model.compile(loss = self.loss, optimizer = self.optimizer, metrics = self.metrics)
@@ -145,4 +169,3 @@ class NeuralNetworkModel:
         self.__setLoss__(loss_func)
         self.__setOptimizer__(optimizer)
         self.__setMetrics__(metrics)
-
