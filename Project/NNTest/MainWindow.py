@@ -7,7 +7,7 @@
 # WARNING! All changes made in this file will be lost!
 
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PySide2 import QtCore, QtGui, QtWidgets
 
 
 class Ui_MainWindow(object):
@@ -78,6 +78,9 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.AdvancedLayout = QtWidgets.QVBoxLayout()
         self.AdvancedLayout.setObjectName("AdvancedLayout")
+        #TODO
+        self.AdvancedLayout.setVisible
+        #TODO
         self.LayerCounter = QtWidgets.QGridLayout()
         self.LayerCounter.setObjectName("LayerCounter")
         self.LayerCountLabel = QtWidgets.QLabel(self.frame)
@@ -205,7 +208,7 @@ class Ui_MainWindow(object):
         self.comboBox.setItemText(0, _translate("MainWindow", "RELU"))
         self.comboBox.setItemText(1, _translate("MainWindow", "Sigmoid"))
         self.comboBox.setItemText(2, _translate("MainWindow", "ELU"))
-        self.comboBox.setItemText(3, _translate("MainWindow", "Tangh"))
+        self.comboBox.setItemText(3, _translate("MainWindow", "Tanh"))
         self.comboBox.setItemText(4, _translate("MainWindow", "Softmax"))
         self.label_2.setText(_translate("MainWindow", "Количество нейронов в 1 слое:"))
         self.label_3.setText(_translate("MainWindow", "Функция активации: "))
