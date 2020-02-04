@@ -7,8 +7,9 @@
 # WARNING! All changes made in this file will be lost!
 
 
-from PySide2 import QtCore, QtGui, QtWidgets
-
+from PyQt5 import QtCore, QtGui, QtWidgets
+from sklearn.datasets import make_classification
+from NeuralNetworkModel import *
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -78,9 +79,6 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.AdvancedLayout = QtWidgets.QVBoxLayout()
         self.AdvancedLayout.setObjectName("AdvancedLayout")
-        #TODO
-        self.AdvancedLayout.setVisible
-        #TODO
         self.LayerCounter = QtWidgets.QGridLayout()
         self.LayerCounter.setObjectName("LayerCounter")
         self.LayerCountLabel = QtWidgets.QLabel(self.frame)
@@ -99,6 +97,9 @@ class Ui_MainWindow(object):
         self.gridLayout = QtWidgets.QGridLayout(self.AdvancedModeWidget)
         self.gridLayout.setObjectName("gridLayout")
         self.comboBox = QtWidgets.QComboBox(self.AdvancedModeWidget)
+
+        self.AdvancedModeWidget.setVisible(False)
+
         self.comboBox.setObjectName("comboBox")
         self.comboBox.addItem("")
         self.comboBox.addItem("")
@@ -190,7 +191,6 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuHelp.menuAction())
         self.menubar.addAction(self.menuInfo.menuAction())
-
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(1)
         self.radioButton.toggled['bool'].connect(self.AdvancedModeWidget.setVisible)
