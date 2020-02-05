@@ -4,8 +4,8 @@ import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 
-class NeuralNetworkModel:
 
+class NeuralNetworkModel:
     #Собственная функция для инициализации весов
     def SVD(self,shape,dtype = None):
         # Не знаю пока как реализовать правильно, но тут я создаю массивы для каждого из классов,
@@ -44,9 +44,10 @@ class NeuralNetworkModel:
         print(outputMass)
         return outputMass
 
-    def __init__(self,inputArray,realClass,layer_count, neuron_counter=[1], activation_function=["sigmoid"], kernel_init=["random_uniform"]):
-        self.inputArray = inputArray
-        self.realClass = realClass
+    def __init__(self):
+        self.model = keras.models.Sequential()
+
+    def setParams(self,layer_count, neuron_counter=[1], activation_function=["sigmoid"], kernel_init=["random_uniform"]):
         self.activation_enum = {
             'relu': keras.activations.relu,
             'softmax': keras.activations.softmax,
@@ -74,12 +75,17 @@ class NeuralNetworkModel:
         self.__setActivationFunc__(activation_function)
         self.model = keras.models.Sequential()
 
+    def setDataset(self,inputArray,realClass):
+        self.inputArray=inputArray
+        self.realClass=realClass
+
     def __setLayer_count__(self, layer_count):
         if layer_count>0 :
             self.layer_count=layer_count
         else:
             #TODO реализовать какоето событие при неверном количестве слоев ИНС
             print("Не верное количество слоев, пропробуйте еще")
+
     def __setNeuron_counter__(self, neuron_count):
         counter =np.array(neuron_count,dtype=int)
         if counter.size == self.layer_count :
@@ -87,6 +93,7 @@ class NeuralNetworkModel:
         else:
             #TODO Реализовать ошибку инициализации количества нейронов в сети
             print("Error value.")
+
     def __setKernel_init__(self, kernel_init):
         kernel = np.array(kernel_init,dtype=str)
         self.kernel_init = []
@@ -96,6 +103,7 @@ class NeuralNetworkModel:
             except KeyError as e:
                 # можно также присвоить значение по умолчанию вместо бросания исключения
                 raise ValueError('Undefined unit: {}'.format(e.args[0]))
+
     def __setActivationFunc__(self,activation_function):
         func_array = np.array(activation_function,dtype=str)
         self.activation_function=[]
@@ -110,24 +118,28 @@ class NeuralNetworkModel:
         # else:
         #     #TODO
         #     print("Error value")
+
     def __setEpochs__(self, epoch):
         if epoch > 0:
             self.epochs = epoch
         else:
             # TODO реализовать какоето событие при неверном количестве слоев ИНС
             print("Не верное количество слоев, пропробуйте еще")
+
     def __setLoss__(self,loss_func):
         if type(loss_func) == str :
             self.loss=loss_func
         else:
             #TODO
             print("Error loss func")
+
     def __setOptimizer__(self,optimizer):
         if type(optimizer) == str :
             self.optimizer = optimizer
         else:
             #TODO
             print("Error optimize func")
+
     def __setMetrics__(self,metric):
         #TODO Реализовать метод
         self.metrics=metric
