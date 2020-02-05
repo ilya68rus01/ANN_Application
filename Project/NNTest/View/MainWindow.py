@@ -66,13 +66,13 @@ class Ui_MainWindow(object):
         self.radioButton_2.setFont(font)
         self.radioButton_2.setObjectName("radioButton_2")
         self.verticalLayout.addWidget(self.radioButton_2)
-        self.radioButton = QtWidgets.QRadioButton(self.centralwidget)
+        self.AdvancedMode_rbttn = QtWidgets.QRadioButton(self.centralwidget)
         font = QtGui.QFont()
         font.setFamily("Times New Roman")
         font.setPointSize(12)
-        self.radioButton.setFont(font)
-        self.radioButton.setObjectName("radioButton")
-        self.verticalLayout.addWidget(self.radioButton)
+        self.AdvancedMode_rbttn.setFont(font)
+        self.AdvancedMode_rbttn.setObjectName("radioButton")
+        self.verticalLayout.addWidget(self.AdvancedMode_rbttn)
         self.frame = QtWidgets.QFrame(self.centralwidget)
         self.frame.setEnabled(True)
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
@@ -96,6 +96,7 @@ class Ui_MainWindow(object):
         self.LayerCounter.addWidget(self.LayerCountLineEdit, 1, 1, 1, 1)
         self.AdvancedLayout.addLayout(self.LayerCounter)
         self.AdvancedModeWidget = QtWidgets.QWidget(self.frame)
+        self.AdvancedModeWidget.setVisible(False)
         self.AdvancedModeWidget.setObjectName("AdvancedModeWidget")
         self.gridLayout = QtWidgets.QGridLayout(self.AdvancedModeWidget)
         self.gridLayout.setObjectName("gridLayout")
@@ -191,11 +192,10 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuHelp.menuAction())
         self.menubar.addAction(self.menuInfo.menuAction())
-
         self.retranslateUi(MainWindow)
         self.Info_Frame.setCurrentIndex(0)
-        self.radioButton.toggled['bool'].connect(self.AdvancedModeWidget.setVisible)
-        self.LayerCountLineEdit.editingFinished.connect(self.AdvancedModeWidget.show)
+        self.AdvancedMode_rbttn.toggled['bool'].connect(self.AdvancedModeWidget.setVisible)
+        self.radioButton_2.setChecked(True)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -206,7 +206,7 @@ class Ui_MainWindow(object):
         self.Info_Frame.setTabText(self.Info_Frame.indexOf(self.tab_3), _translate("MainWindow", "Метрики"))
         self.label.setText(_translate("MainWindow", "Выберите способ настройки нейронной сети: "))
         self.radioButton_2.setText(_translate("MainWindow", "Простой"))
-        self.radioButton.setText(_translate("MainWindow", "Расширенный"))
+        self.AdvancedMode_rbttn.setText(_translate("MainWindow", "Расширенный"))
         self.LayerCountLabel.setText(_translate("MainWindow", "Количество слоев в нейронной сети:"))
         self.activation_func_CBox.setItemText(0, _translate("MainWindow", "RELU"))
         self.activation_func_CBox.setItemText(1, _translate("MainWindow", "Sigmoid"))
@@ -235,13 +235,3 @@ class Ui_MainWindow(object):
         self.actionOpen.setText(_translate("MainWindow", "Open"))
         self.actionNew.setText(_translate("MainWindow", "New"))
         self.action_2.setText(_translate("MainWindow", "Создал Хрущев Илья"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-    sys.exit(app.exec_())

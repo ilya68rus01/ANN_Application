@@ -2,8 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7708077e-1f88-427e-abdd-28f5e0866661" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Controller/Controller.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Controller/NeuralNetworkController.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Controller/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/NeuralNetworkView.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/View/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyNeuralNetworkApplication/Test.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MainWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainWindow.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MainWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/View/MainWindow.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NeuralNetworkModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/Model/NeuralNetworkModel.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -31,6 +39,9 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Илья\Desktop\hello-world\Project\NNTest\View" />
+      <recent name="C:\Users\Илья\Desktop\hello-world\Project\NNTest\Controller" />
+      <recent name="C:\Users\Илья\Desktop\hello-world\Project\NNTest\Model" />
       <recent name="C:\Users\Илья\PycharmProjects\NNTest" />
     </key>
   </component>
