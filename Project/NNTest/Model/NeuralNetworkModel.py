@@ -144,6 +144,10 @@ class NeuralNetworkModel:
         #TODO Реализовать метод
         self.metrics=metric
 
+    def get_history(self):
+        return [self.info.history['loss'],self.info.history['accuracy']]
+
+
     # Метод для обучения нейронки
     def trainNeuralNetwork(self):
         # Плохой вариант реализации добавдения первого слоя
