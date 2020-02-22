@@ -5,10 +5,17 @@
 # Created by: PyQt5 UI code generator 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
-
-
+import numpy as np
+import pyqtgraph as pg
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+from PyQt5.QtWidgets import QGridLayout
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
+from PyQt5.QtGui import QPainter, QPixmap, QPen, QColor
+from PyQt5.QtCore import Qt
+from PyQt5 import uic
+from View.DrawWidget import *
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -196,14 +203,71 @@ class Ui_MainWindow(object):
         self.Info_Frame.setCurrentIndex(0)
         self.AdvancedMode_rbttn.toggled['bool'].connect(self.AdvancedModeWidget.setVisible)
         self.radioButton_2.setChecked(True)
+        self.figure = plt.figure()
+        self.canvas = FigureCanvas(self.figure)
+        self.training_graph_layout = QtWidgets.QVBoxLayout()
+        self.training_graph_layout.addWidget(self.canvas)
+        self.tab_3.setLayout(self.training_graph_layout)
+        #############################################
+        self.ANNlabel = QtWidgets.QLabel()
+        # self.ANNlabel.setGeometry(300, 300, 280, 270)
+        self.canvas = QPixmap(400,400)
+        self.ANNlabel.setPixmap(self.canvas)
+        self.ANNlayout = QtWidgets.QVBoxLayout()
+        self.ANNlayout.addWidget(self.ANNlabel)
+        self.tab_2.setLayout(self.ANNlayout)
+        #
+        # self.painter = QPainter()
+        # self.painter.setPen(QPen(Qt.green,8,Qt.DashLine))
+        # self.figure2 = plt.figure(self.painter)
+        # self.painter.drawEllipse(40,40,200,200)
+        # self.canvas2 = FigureCanvas(self.figure2)
+        # self.ANNlabel.setPixmap(self.canvas)
+        # self.ANNlayout = QGridLayout()
+        # self.ANNlayout.addWidget(self.canvas2)
+        # self.tab_2.setLayout(self.ANNlayout)
+        # self.drow_model()
+        # self.drow_model()
+        #############################################
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    # Метод для построения графика обучения
+    def plot_history(self,data_loss,data_acc):
+        # data = [np.random.random() for i in range(10)]
+        print(data_loss)
+        print(data_acc)
+        # instead of ax.hold(False)
+        self.figure.clear()
+        ax = self.figure.add_subplot(111)
+        ax.plot(data_loss, '*-')
+        ax.plot(data_acc, '.-g')
+
+        # refresh canvas
+        self.canvas.draw()
+
+    # Метод для визуализации структуры и весовых коэфициентов ИНС
+    def drow_model(self):
+            # x, y = [np.random.random(300) for i in range(2)]
+            # w, h = [np.random.random(100) for i in range(2)]
+            # создаем экземпляр QPainter, передавая холст (self.label.pixmap())
+            painter = QPainter(self.ANNlabel.pixmap())
+            pen = QPen()
+            pen.setWidth(3)
+            painter.setPen(pen)
+            painter.begin(self)
+            painter.drawEllipse(200, 200, 100, 100)
+            painter.end()
+            self.ANNlayout.update()
+        # TODO реализовать визуализацию структуры ИНС
+
+
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.Info_Frame.setTabText(self.Info_Frame.indexOf(self.tab), _translate("MainWindow", "Данные"))
-        self.Info_Frame.setTabText(self.Info_Frame.indexOf(self.tab_2), _translate("MainWindow", "Построенная ИНС"))
-        self.Info_Frame.setTabText(self.Info_Frame.indexOf(self.tab_3), _translate("MainWindow", "Метрики"))
+        self.Info_Frame.setTabText(self.Info_Frame.indexOf(self.tab_2), _translate("MainWindow", "Структура ИНС"))
+        self.Info_Frame.setTabText(self.Info_Frame.indexOf(self.tab_3), _translate("MainWindow", "График обучения"))
         self.label.setText(_translate("MainWindow", "Выберите способ настройки нейронной сети: "))
         self.radioButton_2.setText(_translate("MainWindow", "Простой"))
         self.AdvancedMode_rbttn.setText(_translate("MainWindow", "Расширенный"))

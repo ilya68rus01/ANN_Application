@@ -1,5 +1,6 @@
 from sklearn.datasets import make_classification
 from Controller import Controller
+import pyqtgraph as pg
 from Controller.NeuralNetworkController import *
 from View.MainWindow import *
 
@@ -27,13 +28,10 @@ class NeuralNetworkView(QtWidgets.QMainWindow):
         self.controller.fitModel(epochs=int(self.ui.epoch_SpBox.text()),loss_func="sparse_categorical_crossentropy",metrics=["accuracy"],optimizer="sgd")
         print("Good 4")
 
+    def plot(self,data_loss,data_acc):
+        self.ui.plot_history(data_loss=data_loss,data_acc=data_acc)
+        self.ui.drow_model()
 
-        # nn = NeuralNetworkModel(X, y, layer_count=int(self.ui.LayerCountLineEdit.text()), neuron_counter=[20, 3, 3],
-        #                         activation_function=["", "relu", "softmax"],
-        #                         kernel_init=["", "SVD", "zeros"])  ## Вернуть SVD
-        # nn.setTrainConfig(epochs=int(self.ui.epoch_SpBox.text()) , loss_func="sparse_categorical_crossentropy",
-        # optimizer="sgd", metrics=["accuracy"])
-        # nn.trainNeuralNetwork()
 
     def setController(self,controller):
         self.controller = controller
