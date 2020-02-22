@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import QWidget, QApplication
-from PyQt5.QtGui import QPainter, QColor, QPen
+from PyQt5.QtGui import QPainter, QColor, QPen, QPixmap
 from PyQt5.QtCore import Qt
 
 
@@ -22,10 +22,22 @@ class Example(QWidget):
 
 
     def paintEvent(self, e):
-        self.painter.begin(self)
-        self.drawLines()
-        self.painter.end()
+        if self.mModified:
+            pixmap = QPixmap(self.size())
+            pixmap.fill(Qt.white)
+            painter = QPainter(pixmap)
+            painter.drawPixmap(0, 0, self.mPixmap)
+            self.drawBackground(painter)
+            self.mPixmap = pixmap
+            self.mModified = False
+        self.painter = QPainter(self)
+        self.painter.drawPixmap(0, 0, self.mPixmap)
 
+    def drawBackground(self, qp):
+        func, kwargs = self.func
+        if func is not None:
+            kwargs["qp"] = qp
+            func(**kwargs)
 
     def drawLines(self):
         pen = QPen(Qt.black, 2, Qt.SolidLine)

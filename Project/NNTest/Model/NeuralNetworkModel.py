@@ -3,6 +3,7 @@ import matplotlib.pyplot as pltG
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras
+from Model.WeightsCallback import *
 
 
 class NeuralNetworkModel:
@@ -46,6 +47,7 @@ class NeuralNetworkModel:
 
     def __init__(self):
         self.model = keras.models.Sequential()
+        self.callback = WeightsCallback()
 
     def setParams(self,layer_count, neuron_counter=[1], activation_function=["sigmoid"], kernel_init=["random_uniform"]):
         self.activation_enum = {
@@ -159,27 +161,10 @@ class NeuralNetworkModel:
             i=i+1
         # Незнаю тут врядли можно что придумать просто задаю значения параметров по факту
         self.model.compile(loss = self.loss, optimizer = self.optimizer, metrics = self.metrics)
-        self.info = self.model.fit(self.inputArray, self.realClass, epochs=self.epochs, validation_split=0.1)
-        #model2.add(keras.layers.Input(20))
-        #model2.add(keras.layers.Dense(3, activation="relu", kernel_initializer=self.my_init))
-        #model2.add(keras.layers.Dense(3,activation="softmax",kernel_initializer='he_normal'))
-        #model2.compile(loss='sparse_categorical_crossentropy', optimizer='sgd', metrics=["accuracy"])
-        #self.info = model2.fit(self.inputArray, self.realClass, epochs=self.epochs, validation_split=0.1)
-    # def plot(self):
-    #     pltG.plot(self.info.history['loss'])
-    #     pltG.plot(self.info.history['acc'])
-    #     pltG.title('Model loss')
-    #     pltG.ylabel('Loss')
-    #     pltG.xlabel('Epoch')
-    #     pltG.legend(['Loss', 'Accuracy'], loc='upper left')
-    #     pltG.show()
-    #     pltG.plot(self.info.history['val_loss'])
-    #     pltG.plot(self.info.history['val_acc'])
-    #     pltG.title('Modelvalid loss')
-    #     pltG.ylabel('Loss')
-    #     pltG.xlabel('Epoch')
-    #     pltG.legend(['Val_Loss', 'Val_Accuracy'], loc='upper left')
-    #     pltG.show()
+        self.info = self.model.fit(self.inputArray, self.realClass, epochs=self.epochs,
+                                   validation_split=0.1,callbacks=[self.callback])
+
+
     def setTrainConfig(self, epochs, loss_func, optimizer, metrics):
         self.__setEpochs__(epochs)
         self.__setLoss__(loss_func)

@@ -209,13 +209,17 @@ class Ui_MainWindow(object):
         self.training_graph_layout.addWidget(self.canvas)
         self.tab_3.setLayout(self.training_graph_layout)
         #############################################
-        self.ANNlabel = QtWidgets.QLabel()
+        # self.ANNlabel = QtWidgets.QLabel()
         # self.ANNlabel.setGeometry(300, 300, 280, 270)
-        self.canvas = QPixmap(400,400)
-        self.ANNlabel.setPixmap(self.canvas)
+        # self.canvas = QPixmap(400,400)
+        # self.ANNlabel.setPixmap(self.canvas)
+        # self.draw_widget = Example()
+        self.scene = QtWidgets.QGraphicsScene()
+        self.graphic = QtWidgets.QGraphicsView(self.scene)
         self.ANNlayout = QtWidgets.QVBoxLayout()
-        self.ANNlayout.addWidget(self.ANNlabel)
+        self.ANNlayout.addWidget(self.graphic)
         self.tab_2.setLayout(self.ANNlayout)
+        self.x =25
         #
         # self.painter = QPainter()
         # self.painter.setPen(QPen(Qt.green,8,Qt.DashLine))
@@ -247,17 +251,20 @@ class Ui_MainWindow(object):
 
     # Метод для визуализации структуры и весовых коэфициентов ИНС
     def drow_model(self):
+        self.scene.addEllipse(100,100,self.x,self.x)
+        self.x += 25
+        # self.draw_widget.drawBackground(self.draw_widget.drawLines,{})
             # x, y = [np.random.random(300) for i in range(2)]
             # w, h = [np.random.random(100) for i in range(2)]
             # создаем экземпляр QPainter, передавая холст (self.label.pixmap())
-            painter = QPainter(self.ANNlabel.pixmap())
-            pen = QPen()
-            pen.setWidth(3)
-            painter.setPen(pen)
-            painter.begin(self)
-            painter.drawEllipse(200, 200, 100, 100)
-            painter.end()
-            self.ANNlayout.update()
+            # painter = QPainter(self.ANNlabel.pixmap())
+            # pen = QPen()
+            # pen.setWidth(3)
+            # painter.setPen(pen)
+            # painter.begin(self)
+            # painter.drawEllipse(200, 200, 100, 100)
+            # painter.end()
+            # self.ANNlayout.update()
         # TODO реализовать визуализацию структуры ИНС
 
 
