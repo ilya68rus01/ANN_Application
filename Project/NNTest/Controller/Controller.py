@@ -1,5 +1,8 @@
 from abc import ABCMeta, abstractmethod, abstractproperty
 
+from Model import config
+
+
 class Controller():
     __metaclass__ = ABCMeta
 
@@ -17,6 +20,6 @@ class Controller():
         pass
 
     @abstractmethod
-    def fitModel(self,epochs,loss_func,metrics,optimizer):
+    def fitModel(self, config: config):
         print("Oppa")
         pass
