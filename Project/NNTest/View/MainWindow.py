@@ -17,7 +17,8 @@ from PyQt5.QtCore import Qt
 from PyQt5 import uic
 from View.DrawWidget import *
 
-class Ui_MainWindow(object):
+
+class Ui_MainWindow():
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1016, 697)
@@ -38,7 +39,8 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.setSpacing(7)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.Info_Frame = QtWidgets.QTabWidget(self.centralwidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
+                                           QtWidgets.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Info_Frame.sizePolicy().hasHeightForWidth())
@@ -219,7 +221,7 @@ class Ui_MainWindow(object):
         self.ANNlayout = QtWidgets.QVBoxLayout()
         self.ANNlayout.addWidget(self.graphic)
         self.tab_2.setLayout(self.ANNlayout)
-        self.x =25
+        self.x = 25
         #
         # self.painter = QPainter()
         # self.painter.setPen(QPen(Qt.green,8,Qt.DashLine))
@@ -236,7 +238,7 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     # Метод для построения графика обучения
-    def plot_history(self,data_loss,data_acc):
+    def plot_history(self, data_loss, data_acc):
         # data = [np.random.random() for i in range(10)]
         print(data_loss)
         print(data_acc)
@@ -250,24 +252,22 @@ class Ui_MainWindow(object):
         self.canvas.draw()
 
     # Метод для визуализации структуры и весовых коэфициентов ИНС
-    def drow_model(self):
-        self.scene.addEllipse(100,100,self.x,self.x)
+    def draw_model(self):
+        self.scene.addEllipse(100, 100, self.x, self.x)
         self.x += 25
         # self.draw_widget.drawBackground(self.draw_widget.drawLines,{})
-            # x, y = [np.random.random(300) for i in range(2)]
-            # w, h = [np.random.random(100) for i in range(2)]
-            # создаем экземпляр QPainter, передавая холст (self.label.pixmap())
-            # painter = QPainter(self.ANNlabel.pixmap())
-            # pen = QPen()
-            # pen.setWidth(3)
-            # painter.setPen(pen)
-            # painter.begin(self)
-            # painter.drawEllipse(200, 200, 100, 100)
-            # painter.end()
-            # self.ANNlayout.update()
+        # x, y = [np.random.random(300) for i in range(2)]
+        # w, h = [np.random.random(100) for i in range(2)]
+        # создаем экземпляр QPainter, передавая холст (self.label.pixmap())
+        # painter = QPainter(self.ANNlabel.pixmap())
+        # pen = QPen()
+        # pen.setWidth(3)
+        # painter.setPen(pen)
+        # painter.begin(self)
+        # painter.drawEllipse(200, 200, 100, 100)
+        # painter.end()
+        # self.ANNlayout.update()
         # TODO реализовать визуализацию структуры ИНС
-
-
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
