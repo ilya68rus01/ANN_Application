@@ -11,6 +11,7 @@ from Controller.NeuralNetworkController import *
 def main():
     app = QApplication(sys.argv)
 
+
     # создаём модель
     model = NeuralNetworkModel()
     # Создаем представление
