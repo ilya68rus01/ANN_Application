@@ -21,6 +21,7 @@ class NeuralNetworkController(Controller, ABC, Callback):
         self.view.show()
         self.neural_model.after_epochs_end_callback = self
 
+
     def on_start_button_click(self):
         X, y = make_classification(n_samples=100000, n_features=20, n_informative=3, n_redundant=2, n_repeated=0,
                                    n_classes=3, n_clusters_per_class=2, weights=None, flip_y=0.01, class_sep=1.0,
