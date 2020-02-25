@@ -6,8 +6,8 @@ from Controller.Controller import *
 
 class NeuralNetworkController(Controller, ABC):
     def __init__(self,model,view):
-        self.view = view
-        self.model = model
+        self.view = NeuralNetworkView()
+        self.model = NeuralNetworkModel()
         self.view.show()
 
     def setModelParams(self,layer_count,neuron_counter,activation_function,kernel_init):

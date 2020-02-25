@@ -14,11 +14,11 @@ def main():
     # создаём модель
     model = NeuralNetworkModel()
     # Создаем представление
-    view = NeuralNetworkView()
+    view = NeuralNetworkView
 
     # создаём контроллер и передаём ему ссылку на модель и отображение
-    controller = NeuralNetworkController(model=model,view=view)
-    view.setController(controller=controller)
+    controller = NeuralNetworkController(model = model,view=view)
+    view.setController(view,controller=controller)
     app.exec()
 
 
