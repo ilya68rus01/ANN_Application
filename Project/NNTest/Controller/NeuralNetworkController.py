@@ -1,12 +1,12 @@
 from abc import ABC
 
-from keras.callbacks import Callback
+
 from sklearn.datasets import make_classification
 from Model.config import TrainingConfig
 from View.NeuralNetworkView import *
 from Model.NeuralNetworkModel import *
 from Controller.Controller import *
-
+from keras.callbacks import Callback
 
 class NeuralNetworkController(Controller, ABC, Callback):
     struct = None

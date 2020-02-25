@@ -2,8 +2,8 @@ import matplotlib as mpl
 import matplotlib.pyplot as pltG
 import numpy as np
 import tensorflow as tf
-from keras.callbacks import Callback
 from tensorflow import keras
+from keras.callbacks import Callback
 from Model.WeightsCallback import *
 
 
