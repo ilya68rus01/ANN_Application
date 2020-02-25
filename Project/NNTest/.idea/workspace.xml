@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="b3408cc4-abf2-444b-b39e-ad6d88a67b5b" name="Default Changelist" comment="" />
     <list id="557e9c7b-ac93-4525-94e6-b7710a05738d" name="Revert &quot;Fix&quot;" comment="Revert &quot;Fix&quot;&#10;&#10;This reverts commit 2fd5253e">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Controller/NeuralNetworkController.py" beforeDir="false" afterPath="$PROJECT_DIR$/Controller/NeuralNetworkController.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+=======
+    <list default="true" id="7708077e-1f88-427e-abdd-28f5e0866661" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Controller/NeuralNetworkController.py" beforeDir="false" afterPath="$PROJECT_DIR$/Controller/NeuralNetworkController.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/NeuralNetworkModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/Model/NeuralNetworkModel.py" afterDir="false" />
+>>>>>>> a49629cbe746122547cf11df7aa471e54deed0fc
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

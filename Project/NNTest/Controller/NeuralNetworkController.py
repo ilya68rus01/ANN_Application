@@ -1,32 +1,71 @@
 from abc import ABC
+
+
+from sklearn.datasets import make_classification
+from Model.config import TrainingConfig
 from View.NeuralNetworkView import *
-from  Model.NeuralNetworkModel import *
+from Model.NeuralNetworkModel import *
 from Controller.Controller import *
+from keras.callbacks import Callback
 
+class NeuralNetworkController(Controller, ABC, Callback):
+    struct = None
+    flag = False
+    counter = 0
 
-class NeuralNetworkController(Controller, ABC):
-    def __init__(self,model,view):
-        self.view = NeuralNetworkView()
-        self.model = NeuralNetworkModel()
+    def __init__(self, model: NeuralNetworkModel, view: NeuralNetworkView):
+        super().__init__()
+        self.view = view
+        self.neural_model = model
+        self.view.set_on_click_listener(lambda: self.on_start_button_click())
         self.view.show()
+        self.neural_model.after_epochs_end_callback = self
 
-    def setModelParams(self,layer_count,neuron_counter,activation_function,kernel_init):
-        print("SetParamContr Good")
-        self.model.setParams(layer_count=layer_count, neuron_counter=neuron_counter,
-                             activation_function=activation_function, kernel_init=kernel_init)
+    def on_start_button_click(self):
+        X, y = make_classification(n_samples=100000, n_features=20, n_informative=3, n_redundant=2, n_repeated=0,
+                                   n_classes=3, n_clusters_per_class=2, weights=None, flip_y=0.01, class_sep=1.0,
+                                   hypercube=True, shift=0.0, scale=1.0, shuffle=True, random_state=42)
+        print("Good 1")
+        self.neural_model.setDataset(inputArray=X, realClass=y)
 
-    def setData(self,X,y):
-        print("setDatasetContr Good")
-        self.model.setDataset(inputArray=X,realClass=y)
+        print("Good 2")
+        self.neural_model.setParams(layer_count=int(self.view.ui.LayerCountLineEdit.text()),
+                                    neuron_counter=[20, 3, 3],
+                                    activation_function=["", "relu", "softmax"],
+                                    kernel_init=["", "SVD", "zeros"])
 
-    def fitModel(self,epochs,loss_func,metrics,optimizer):
-        print("Fit good")
-        self.model.setTrainConfig(epochs=epochs,loss_func=loss_func,metrics=metrics,optimizer=optimizer)
-        self.model.trainNeuralNetwork()
-        data_loss,data_acc = self.model.get_history()
-        print(data_loss)
-        print(data_acc)
-        # print(X_l)
-        # print(y_l)
-        self.view.plot(data_loss=data_loss,data_acc=data_acc)
-        # self.view.plot(data_loss=data_loss)
+        print("Good 3")
+
+        train_config = TrainingConfig(
+            epochs=int(self.view.ui.epoch_SpBox.text()),
+            loss_func="sparse_categorical_crossentropy",
+            metrics=["accuracy"],
+            optimizer="sgd",
+        )
+
+        self.neural_model.setTrainConfig(train_config)
+        self.neural_model.trainNeuralNetwork()
+        print("Good 4")
+
+        data_loss, data_acc = self.neural_model.get_history()
+
+        self.view.plot(data_loss=data_loss, data_acc=data_acc)
+
+    def on_train_end(self, logs={}):
+        print(self.model.get_layer(index=0).get_weights())
+        print(self.model.get_layer(index=1).get_weights())
+        self.struct = [self.model.get_layer(index=0).get_weights(), self.model.get_layer(index=1).get_weights()]
+
+    def on_epoch_end(self, batch, logs={}):
+        if self.counter == 5:
+            for layer in range(np.size(self.model.layers)):
+                print(self.model.get_layer(index=layer).get_weights())
+            self.counter = 0
+            self.struct = [self.model.get_layer(index=0).get_weights(), self.model.get_layer(index=1).get_weights()]
+            self.flag = True
+        else:
+            self.counter = self.counter + 1
+
+    def get_struct(self):
+        self.flag = False
+        return self.struct
