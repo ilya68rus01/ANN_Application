@@ -10,7 +10,10 @@ class NeuralNetworkView(QtWidgets.QMainWindow):
 
     def plot(self, data_loss, data_acc):
         self.ui.plot_history(data_loss=data_loss, data_acc=data_acc)
-        self.ui.draw_model()
+        # self.ui.draw_model()
 
     def set_on_click_listener(self, action):
         self.ui.Start_Button.clicked.connect(action)
+
+    def draw_struct(self,weights_model):
+        self.ui.draw_model(weights=weights_model)

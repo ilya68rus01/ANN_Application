@@ -210,63 +210,69 @@ class Ui_MainWindow():
         self.training_graph_layout = QtWidgets.QVBoxLayout()
         self.training_graph_layout.addWidget(self.canvas)
         self.tab_3.setLayout(self.training_graph_layout)
-        #############################################
-        # self.ANNlabel = QtWidgets.QLabel()
-        # self.ANNlabel.setGeometry(300, 300, 280, 270)
-        # self.canvas = QPixmap(400,400)
-        # self.ANNlabel.setPixmap(self.canvas)
-        # self.draw_widget = Example()
         self.scene = QtWidgets.QGraphicsScene()
         self.graphic = QtWidgets.QGraphicsView(self.scene)
         self.ANNlayout = QtWidgets.QVBoxLayout()
         self.ANNlayout.addWidget(self.graphic)
         self.tab_2.setLayout(self.ANNlayout)
         self.x = 25
-        #
-        # self.painter = QPainter()
-        # self.painter.setPen(QPen(Qt.green,8,Qt.DashLine))
-        # self.figure2 = plt.figure(self.painter)
-        # self.painter.drawEllipse(40,40,200,200)
-        # self.canvas2 = FigureCanvas(self.figure2)
-        # self.ANNlabel.setPixmap(self.canvas)
-        # self.ANNlayout = QGridLayout()
-        # self.ANNlayout.addWidget(self.canvas2)
-        # self.tab_2.setLayout(self.ANNlayout)
-        # self.drow_model()
-        # self.drow_model()
-        #############################################
+
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     # Метод для построения графика обучения
     def plot_history(self, data_loss, data_acc):
-        # data = [np.random.random() for i in range(10)]
         print(data_loss)
         print(data_acc)
-        # instead of ax.hold(False)
         self.figure.clear()
         ax = self.figure.add_subplot(111)
         ax.plot(data_loss, '*-')
         ax.plot(data_acc, '.-g')
-
-        # refresh canvas
         self.canvas.draw()
 
     # Метод для визуализации структуры и весовых коэфициентов ИНС
-    def draw_model(self):
-        self.scene.addEllipse(100, 100, self.x, self.x)
-        self.x += 25
-        # self.draw_widget.drawBackground(self.draw_widget.drawLines,{})
-        # x, y = [np.random.random(300) for i in range(2)]
-        # w, h = [np.random.random(100) for i in range(2)]
-        # создаем экземпляр QPainter, передавая холст (self.label.pixmap())
-        # painter = QPainter(self.ANNlabel.pixmap())
-        # pen = QPen()
-        # pen.setWidth(3)
-        # painter.setPen(pen)
-        # painter.begin(self)
-        # painter.drawEllipse(200, 200, 100, 100)
-        # painter.end()
-        # self.ANNlayout.update()
+    def draw_model(self, weights):
+        neuron_in_layer = list()
+        neuron_in_layer.append( weights[0][0].shape[0] )
+        for x in weights:
+            neuron_in_layer.append( x[0].shape[1] ) #возвращает количество нейронов во входном слое
+        print(neuron_in_layer[0])
+        x_circle = 0
+        y_circle = 0
+        flag = False
+        diameter = 30
+        for i in range(np.size( neuron_in_layer )):
+            for j in range(neuron_in_layer[i]):
+                self.scene.addEllipse(x_circle, y_circle, diameter, diameter)
+                if y_circle > 0:
+                    y_circle = y_circle * -1
+                else:
+                    y_circle = y_circle * -1
+                    y_circle += 40
+            x_circle += 300
+            y_circle = 0
+        x1_line = 15
+        y1_line = 0
+        x2_line = 300
+        y2_line = 0
+        for i in range( np.size(neuron_in_layer) - 1):# для количества слоев -1
+            for j in range( neuron_in_layer[i]): # для киоличества нейронов в слое
+                for k in range( neuron_in_layer[i+1]):
+                    self.scene.addLine(x1_line, y1_line+15, x2_line, y2_line + 15)
+                    if y2_line > 0:
+                        y2_line = y2_line * -1
+                    else:
+                        y2_line = y2_line * -1
+                        y2_line += 40
+
+                y2_line = 0
+                if y1_line > 0:
+                    y1_line = y1_line * -1
+                else:
+                    y1_line = y1_line * -1
+                    y1_line += 40
+            x1_line += 300
+            x2_line += 300
+            y1_line = 0
         # TODO реализовать визуализацию структуры ИНС
 
     def retranslateUi(self, MainWindow):
