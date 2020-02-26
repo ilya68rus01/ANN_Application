@@ -166,6 +166,7 @@ class NeuralNetworkModel:
         self.model.compile(loss=self.loss, optimizer=self.optimizer, metrics=self.metrics)
         self.info = self.model.fit(self.inputArray, self.realClass, epochs=self.epochs,
                                    validation_split=0.1, callbacks=[self.after_epochs_end_callback])
+        return self.info
 
     def setTrainConfig(self, train_config):
         self.__setEpochs__(train_config.epochs)

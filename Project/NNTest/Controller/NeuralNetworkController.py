@@ -1,6 +1,6 @@
 from abc import ABC
 
-from keras.callbacks import Callback
+from PyQt5.QtCore import QRunnable, pyqtSlot, QThreadPool, pyqtSignal, QObject
 from sklearn.datasets import make_classification
 from Model.config import TrainingConfig
 from View.NeuralNetworkView import *
@@ -20,6 +20,7 @@ class NeuralNetworkController(Controller, ABC, Callback):
         self.view.set_on_click_listener(lambda: self.on_start_button_click())
         self.view.show()
         self.neural_model.after_epochs_end_callback = self
+        self.thread_pool = QThreadPool()
 
     def on_start_button_click(self):
         X, y = make_classification(n_samples=100000, n_features=20, n_informative=3, n_redundant=2, n_repeated=0,
@@ -43,13 +44,11 @@ class NeuralNetworkController(Controller, ABC, Callback):
             optimizer="sgd",
         )
 
+        worker = Worker(self.neural_model, self.view)
         self.neural_model.setTrainConfig(train_config)
-        self.neural_model.trainNeuralNetwork()
+        # self.neural_model.trainNeuralNetwork()
+        self.thread_pool.start(worker)
         print("Good 4")
-
-        data_loss, data_acc = self.neural_model.get_history()
-
-        self.view.plot(data_loss=data_loss, data_acc=data_acc)
 
     def on_train_end(self, logs={}):
         print(self.model.get_layer(index=0).get_weights())
@@ -69,3 +68,34 @@ class NeuralNetworkController(Controller, ABC, Callback):
     def get_struct(self):
         self.flag = False
         return self.struct
+
+
+class Worker(QRunnable):
+
+    def __init__(self, model: NeuralNetworkModel, view: NeuralNetworkView):
+        super().__init__()
+        self.neural_model = model
+        self.view = view
+        self.setAutoDelete(True)
+        self.signals = WorkerSignals()
+
+    @pyqtSlot()
+    def run(self):
+        try:
+            result = self.neural_model.trainNeuralNetwork()
+
+            # было это, но теперь так не поканает. Посмотри что тебе приходит в конце обучения ожной эпохи
+            # может быть оттуда сможешь достать данные. Ну короче поковыряй
+            # data_loss, data_acc = self.neural_model.get_history()
+            # self.view.plot(data_loss=data_loss, data_acc=data_acc)
+
+            history = result.history
+            self.view.plot(data_loss=history["loss"], data_acc=history["accuracy"])
+        finally:
+            self.signals.finished.emit()
+
+
+class WorkerSignals(QObject):
+    finished = pyqtSignal()
+    error = pyqtSignal(tuple)
+    result = pyqtSignal(object)
