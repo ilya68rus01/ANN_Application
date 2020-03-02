@@ -25,7 +25,7 @@ class NeuralNetworkController(Controller, ABC, Callback):
     def on_start_button_click(self):
         X, y = make_classification(n_samples=100000, n_features=20, n_informative=3, n_redundant=2, n_repeated=0,
                                    n_classes=3, n_clusters_per_class=2, weights=None, flip_y=0.01, class_sep=1.0,
-                                   hypercube=True, shift=0.0, scale=1.0, shuffle=True, random_state=42)
+                                   hypercube=True, shift=0.0, scale=1.0, shuffle=True, random_state=22)
         print("Good 1")
         self.neural_model.setDataset(inputArray=X, realClass=y)
 

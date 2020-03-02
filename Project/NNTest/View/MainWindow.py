@@ -6,13 +6,12 @@
 #
 # WARNING! All changes made in this file will be lost!
 import numpy as np
-import pyqtgraph as pg
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QGridLayout
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
-from PyQt5.QtGui import QPainter, QPixmap, QPen, QColor
+from PyQt5.QtGui import QPainter, QPixmap, QPen, QColor, QFont
 from PyQt5.QtCore import Qt
 from PyQt5 import uic
 from View.DrawWidget import *
@@ -210,31 +209,11 @@ class Ui_MainWindow():
         self.training_graph_layout = QtWidgets.QVBoxLayout()
         self.training_graph_layout.addWidget(self.canvas)
         self.tab_3.setLayout(self.training_graph_layout)
-        #############################################
-        # self.ANNlabel = QtWidgets.QLabel()
-        # self.ANNlabel.setGeometry(300, 300, 280, 270)
-        # self.canvas = QPixmap(400,400)
-        # self.ANNlabel.setPixmap(self.canvas)
-        # self.draw_widget = Example()
         self.scene = QtWidgets.QGraphicsScene()
         self.graphic = QtWidgets.QGraphicsView(self.scene)
         self.ANNlayout = QtWidgets.QVBoxLayout()
         self.ANNlayout.addWidget(self.graphic)
         self.tab_2.setLayout(self.ANNlayout)
-        self.x = 25
-        #
-        # self.painter = QPainter()
-        # self.painter.setPen(QPen(Qt.green,8,Qt.DashLine))
-        # self.figure2 = plt.figure(self.painter)
-        # self.painter.drawEllipse(40,40,200,200)
-        # self.canvas2 = FigureCanvas(self.figure2)
-        # self.ANNlabel.setPixmap(self.canvas)
-        # self.ANNlayout = QGridLayout()
-        # self.ANNlayout.addWidget(self.canvas2)
-        # self.tab_2.setLayout(self.ANNlayout)
-        # self.drow_model()
-        # self.drow_model()
-        #############################################
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     # Метод для построения графика обучения
@@ -247,7 +226,6 @@ class Ui_MainWindow():
         ax = self.figure.add_subplot(111)
         ax.plot(data_loss, '*-')
         ax.plot(data_acc, '.-g')
-
         # refresh canvas
         self.canvas.draw()
 
@@ -256,11 +234,11 @@ class Ui_MainWindow():
         neuron_in_layer = list()
         neuron_in_layer.append(weights[0][0].shape[0])
         for x in weights:
-            neuron_in_layer.append(x[0].shape[1])  # возвращает количество нейронов во входном слое
+            neuron_in_layer.append(x[0].shape[1])
+            # возвращает количество нейронов во входном слое
         print(neuron_in_layer[0])
         x_circle = 0
         y_circle = 0
-        flag = False
         diameter = 30
         for i in range(np.size(neuron_in_layer)):
             for j in range(neuron_in_layer[i]):
@@ -285,7 +263,6 @@ class Ui_MainWindow():
                     else:
                         y2_line = y2_line * -1
                         y2_line += 40
-
                 y2_line = 0
                 if y1_line > 0:
                     y1_line = y1_line * -1
