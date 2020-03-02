@@ -2,31 +2,15 @@ import matplotlib as mpl
 import matplotlib.pyplot as pltG
 import numpy as np
 import tensorflow as tf
-from tensorflow import keras
 from keras.callbacks import Callback
+from tensorflow import keras
 from Model.WeightsCallback import *
-from PyQt5.QtCore import *
 
 
-class NeuralNetworkModel(QRunnable):
+class NeuralNetworkModel:
     after_epochs_end_callback = Callback
-
-    @pyqtSlot()
-    def run(self):
-        i = 1
-        self.model.add(keras.layers.Input(
-            self.inputArray.shape[1]))  # вот это клевый будет вариант, если не задано количество входных нейронов
-        while i != self.layer_count:
-            self.model.add(keras.layers.Dense(self.neuron_counter[i], activation=self.activation_function[i],
-                                              kernel_initializer=self.kernel_init[i]))
-            i = i + 1
-        # Незнаю тут врядли можно что придумать просто задаю значения параметров по факту
-        self.model.compile(loss=self.loss, optimizer=self.optimizer, metrics=self.metrics)
-        self.info = self.model.fit(self.inputArray, self.realClass, epochs=self.epochs,
-                                   validation_split=0.1, callbacks=[self.after_epochs_end_callback])
-
     # Собственная функция для инициализации весов
-    def SVD(self, shape, dtype = None):
+    def SVD(self, shape, dtype=None):
         # Не знаю пока как реализовать правильно, но тут я создаю массивы для каждого из классов,
         # тоесть в 1 массиве все атрибуты соответствующие первому(нулевому) классу и т.д.
         # заполняю нулевыми элементами изза того что он ругается если создать пустой массив (np.array())
@@ -65,8 +49,6 @@ class NeuralNetworkModel(QRunnable):
 
     def __init__(self):
         self.model = keras.models.Sequential()
-        self.callback = WeightsCallback()
-        self.thread_pool = QThreadPool()
 
     def setParams(self, layer_count, neuron_counter=[1], activation_function=["sigmoid"],
                   kernel_init=["random_uniform"]):
@@ -172,8 +154,19 @@ class NeuralNetworkModel(QRunnable):
     # Метод для обучения нейронки
     def trainNeuralNetwork(self):
         # Плохой вариант реализации добавдения первого слоя
-        print("live")
-        self.thread_pool.start(self)
+        # activation=[None,keras.activations.relu,keras.activations.softmax]
+        i = 1
+        self.model.add(keras.layers.Input(
+            self.inputArray.shape[1]))  # вот это клевый будет вариант, если не задано количество входных нейронов
+        while i != self.layer_count:
+            self.model.add(keras.layers.Dense(self.neuron_counter[i], activation=self.activation_function[i],
+                                              kernel_initializer=self.kernel_init[i]))
+            i = i + 1
+        # Незнаю тут врядли можно что придумать просто задаю значения параметров по факту
+        self.model.compile(loss=self.loss, optimizer=self.optimizer, metrics=self.metrics)
+        self.info = self.model.fit(self.inputArray, self.realClass, epochs=self.epochs,
+                                   validation_split=0.1, callbacks=[self.after_epochs_end_callback])
+        return self.info
 
     def setTrainConfig(self, train_config):
         self.__setEpochs__(train_config.epochs)
