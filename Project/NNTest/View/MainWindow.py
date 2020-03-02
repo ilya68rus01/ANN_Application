@@ -252,21 +252,49 @@ class Ui_MainWindow():
         self.canvas.draw()
 
     # Метод для визуализации структуры и весовых коэфициентов ИНС
-    def draw_model(self):
-        self.scene.addEllipse(100, 100, self.x, self.x)
-        self.x += 25
-        # self.draw_widget.drawBackground(self.draw_widget.drawLines,{})
-        # x, y = [np.random.random(300) for i in range(2)]
-        # w, h = [np.random.random(100) for i in range(2)]
-        # создаем экземпляр QPainter, передавая холст (self.label.pixmap())
-        # painter = QPainter(self.ANNlabel.pixmap())
-        # pen = QPen()
-        # pen.setWidth(3)
-        # painter.setPen(pen)
-        # painter.begin(self)
-        # painter.drawEllipse(200, 200, 100, 100)
-        # painter.end()
-        # self.ANNlayout.update()
+    def draw_model(self, weights):
+        neuron_in_layer = list()
+        neuron_in_layer.append(weights[0][0].shape[0])
+        for x in weights:
+            neuron_in_layer.append(x[0].shape[1])  # возвращает количество нейронов во входном слое
+        print(neuron_in_layer[0])
+        x_circle = 0
+        y_circle = 0
+        flag = False
+        diameter = 30
+        for i in range(np.size(neuron_in_layer)):
+            for j in range(neuron_in_layer[i]):
+                self.scene.addEllipse(x_circle, y_circle, diameter, diameter)
+                if y_circle > 0:
+                    y_circle = y_circle * -1
+                else:
+                    y_circle = y_circle * -1
+                    y_circle += 40
+            x_circle += 300
+            y_circle = 0
+        x1_line = 15
+        y1_line = 0
+        x2_line = 300
+        y2_line = 0
+        for i in range(np.size(neuron_in_layer) - 1):  # для количества слоев -1
+            for j in range(neuron_in_layer[i]):  # для киоличества нейронов в слое
+                for k in range(neuron_in_layer[i + 1]):
+                    self.scene.addLine(x1_line, y1_line + 15, x2_line, y2_line + 15)
+                    if y2_line > 0:
+                        y2_line = y2_line * -1
+                    else:
+                        y2_line = y2_line * -1
+                        y2_line += 40
+
+                y2_line = 0
+                if y1_line > 0:
+                    y1_line = y1_line * -1
+                else:
+                    y1_line = y1_line * -1
+                    y1_line += 40
+            x1_line += 300
+            x2_line += 300
+            y1_line = 0
         # TODO реализовать визуализацию структуры ИНС
 
     def retranslateUi(self, MainWindow):

@@ -51,14 +51,19 @@ class NeuralNetworkController(Controller, ABC, Callback):
         print("Good 4")
 
     def on_train_end(self, logs={}):
-        print(self.model.get_layer(index=0).get_weights())
-        print(self.model.get_layer(index=1).get_weights())
-        self.struct = [self.model.get_layer(index=0).get_weights(), self.model.get_layer(index=1).get_weights()]
+        weights = list()
+        for layer in range(np.size(self.model.layers)):
+            weights.append(self.model.get_layer(index=layer).get_weights())
+            # print(self.model.get_layer(index = layer).get_weights())
+        self.view.draw_struct(weights_model=weights)
 
     def on_epoch_end(self, batch, logs={}):
-        if self.counter == 5:
+        weights = list()
+        if self.counter == 2:
             for layer in range(np.size(self.model.layers)):
+                weights.append(self.model.get_layer(index=layer).get_weights())
                 print(self.model.get_layer(index=layer).get_weights())
+            self.view.draw_struct(weights_model=weights)
             self.counter = 0
             self.struct = [self.model.get_layer(index=0).get_weights(), self.model.get_layer(index=1).get_weights()]
             self.flag = True
