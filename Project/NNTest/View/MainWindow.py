@@ -7,14 +7,14 @@
 # WARNING! All changes made in this file will be lost!
 import numpy as np
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QGridLayout
+from PyQt5.QtWidgets import QGridLayout, QScrollArea
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 from PyQt5.QtGui import QPainter, QPixmap, QPen, QColor, QFont
 from PyQt5.QtCore import Qt
 from PyQt5 import uic
-from View.DrawWidget import *
+from View.AdvancedSettingsWidget import *
 
 
 class Ui_MainWindow():
@@ -202,7 +202,7 @@ class Ui_MainWindow():
         self.menubar.addAction(self.menuInfo.menuAction())
         self.retranslateUi(MainWindow)
         self.Info_Frame.setCurrentIndex(0)
-        self.AdvancedMode_rbttn.toggled['bool'].connect(self.AdvancedModeWidget.setVisible)
+        self.AdvancedMode_rbttn.toggled['bool'].connect(self.form_for_setting)
         self.radioButton_2.setChecked(True)
         self.figure = plt.figure()
         self.canvas = FigureCanvas(self.figure)
@@ -215,6 +215,16 @@ class Ui_MainWindow():
         self.ANNlayout.addWidget(self.graphic)
         self.tab_2.setLayout(self.ANNlayout)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def form_for_setting(self):
+        # self.settings = AdvancedSettingsWidget(3)
+        # self.settings.show()
+        # self.AdvancedLayout.addWidget(QScrollArea())
+        for i in range(int(self.LayerCountLineEdit.text())):
+            self.wgt = AdvancedSettingsWidget()
+            self.AdvancedLayout.addWidget(self.wgt)
+        # self.AdvancedLayout.addWidget(self.settings)
+
 
     # Метод для построения графика обучения
     def plot_history(self, data_loss, data_acc):
