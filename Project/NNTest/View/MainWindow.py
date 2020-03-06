@@ -220,7 +220,9 @@ class Ui_MainWindow():
         for i in range(int(self.LayerCountLineEdit.text())):
             self.wgt = AdvancedSettingsWidget(i)
             # self.wgt.show()
+<<<<<<< HEAD
             self.AdvancedLayout.addWidget(self.wgt)
+>>>>>>> 7148d333733d2a56f4858ed771072a7f40a5ef18
         # self.AdvancedLayout.addWidget(self.settings)
 
 
