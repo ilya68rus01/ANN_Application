@@ -217,11 +217,9 @@ class Ui_MainWindow():
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def form_for_setting(self):
-        # self.settings = AdvancedSettingsWidget(3)
-        # self.settings.show()
-        # self.AdvancedLayout.addWidget(QScrollArea())
         for i in range(int(self.LayerCountLineEdit.text())):
-            self.wgt = AdvancedSettingsWidget()
+            self.wgt = AdvancedSettingsWidget(i)
+            # self.wgt.show()
             self.AdvancedLayout.addWidget(self.wgt)
         # self.AdvancedLayout.addWidget(self.settings)
 
