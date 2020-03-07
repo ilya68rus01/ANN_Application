@@ -22,7 +22,7 @@ class NeuralNetworkModel:
         class_val.append(self.realClass[0])
         # Обходим весь массив реальных классов и выбираем из них разные
         # если элемент отличается от нулевого добавляем в список классов, начинаем поиск нового, и т.д.
-        for i in range(np.size(self.realClass)):  # TODO неуверен в корректности возможно .shape[1] .size
+        for i in range(np.size(self.realClass)):
             for j in range(np.size(class_val)):
                 if self.realClass[i] in class_val:
                     pass
@@ -36,18 +36,16 @@ class NeuralNetworkModel:
             for j in range(np.size(self.realClass)):
                 if self.realClass[j] == class_val[i]:
                     array_of_classes[i].append(self.inputArray[j])
-        ClusteringClasses = list()
+        clustering_classes = list()
         for i in range(np.size(class_val)):
-            ClusteringClasses.append(self.clustering(data=array_of_classes[i]))
-        outputMassive = list()
+            clustering_classes.append(self.__clustering__(data=array_of_classes[i]))
+        output_massive = list()
         # Все еще не избавился от зависимости трех классов
-        for x1, x2, x3 in zip(ClusteringClasses[0], ClusteringClasses[1], ClusteringClasses[2]):
-            outputMassive.append(x1 + x2 + x3)
-        # print(np.shape(ClusteringClasses))
-        # print(np.shape(outputMassive))
-        return outputMassive
+        for x1, x2, x3 in zip(clustering_classes[0], clustering_classes[1], clustering_classes[2]):
+            output_massive.append(x1 + x2 + x3)
+        return output_massive
 
-    def clustering(self,data):
+    def __clustering__(self,data):
         mass1 = list()
         mass2 = list()
         mass3 = list()
