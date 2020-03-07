@@ -4,51 +4,100 @@ import numpy as np
 import tensorflow as tf
 from keras.callbacks import Callback
 from tensorflow import keras
+from sklearn.cluster import KMeans
 from Model.WeightsCallback import *
 
 
 class NeuralNetworkModel:
     after_epochs_end_callback = Callback
-    # Собственная функция для инициализации весов
-    def SVD(self, shape, dtype=None):
-        # Не знаю пока как реализовать правильно, но тут я создаю массивы для каждого из классов,
-        # тоесть в 1 массиве все атрибуты соответствующие первому(нулевому) классу и т.д.
-        # заполняю нулевыми элементами изза того что он ругается если создать пустой массив (np.array())
-        massFirstClass = list()
-        massSecondClass = list()
-        massThirdClass = list()
-        for x, i in zip(self.inputArray, self.realClass):
-            if i == 0:
-                massFirstClass.append(x)
-            elif i == 1:
-                massSecondClass.append(x)
-            elif i == 2:
-                massThirdClass.append(x)
-            # Произвожу SVD разложение встроенными в numpy средствами
-        u, weights1, vh = np.linalg.svd(massFirstClass, full_matrices=False)
-        u2, weights2, vh2 = np.linalg.svd(massSecondClass, full_matrices=False)
-        u3, weights3, vh3 = np.linalg.svd(massThirdClass, full_matrices=False)
-        weights1 = weights1 / max(weights1)
-        weights2 = weights2 / max(weights2)
-        weights3 = weights3 / max(weights3)
-        weights1 = weights1.tolist()
-        weights2 = weights2.tolist()
-        weights3 = weights3.tolist()
-        # Вот на этом этапе имеем 3 вектора с коэфициентами после SVD разложения
-        # я думаю что необходимо их объединить в 1 массив причем транспонировав их чтобы из вектора-строки получить вектор-столбец
-        # который будет соответствовать связи и весу нейронной сети.
-        # Элемент [0][0] соответствует связи первого нейрона первого слоя с первым нейроном второго слоя
-        # outputMass = np.vstack([massFirstClass,massSecondClass,massThirdClass])
-        outputMass = list()
-        for firstClassWheight, secondClassWheight, thirdClassWheight in zip(weights1, weights2, weights3):
-            outputMass.append([np.float(firstClassWheight), np.float(secondClassWheight), np.float(thirdClassWheight)])
-        # outputMass = [massFirstClass.tolist() ,massSecondClass.tolist(),massThirdClass.tolist()]
-        # outputMass = np.transpose(outputMass)
-        print(outputMass)
-        return outputMass
 
     def __init__(self):
         self.model = keras.models.Sequential()
+
+    # Собственная функция для инициализации весов
+    def SVD(self, shape, dtype=None):
+        array_of_classes = list()  # Что-то вроде массива массивов в,
+        # котором первый элемент включает в себя объекты "первого" класса
+        class_val = list()  # Реальные значения классов 0,1,2,....
+        class_val.append(self.realClass[0])
+        # Обходим весь массив реальных классов и выбираем из них разные
+        # если элемент отличается от нулевого добавляем в список классов, начинаем поиск нового, и т.д.
+        for i in range(np.size(self.realClass)):  # TODO неуверен в корректности возможно .shape[1] .size
+            for j in range(np.size(class_val)):
+                if self.realClass[i] in class_val:
+                    pass
+                else:
+                    class_val.append(self.realClass[i])
+        sorted(class_val)
+        # Разделяем весь набор данный по соответствующим классам
+        for i in range(np.size(class_val)):  # Количество классов пока не известно и передавать в качесве параметра функции нельзя
+            array_of_classes.append(list())
+            #    array_of_classes[i] = list()
+            for j in range(np.size(self.realClass)):
+                if self.realClass[j] == class_val[i]:
+                    array_of_classes[i].append(self.inputArray[j])
+        ClusteringClasses = list()
+        for i in range(np.size(class_val)):
+            ClusteringClasses.append(self.clustering(data=array_of_classes[i]))
+        outputMassive = list()
+        # Все еще не избавился от зависимости трех классов
+        for x1, x2, x3 in zip(ClusteringClasses[0], ClusteringClasses[1], ClusteringClasses[2]):
+            outputMassive.append(x1 + x2 + x3)
+        # print(np.shape(ClusteringClasses))
+        # print(np.shape(outputMassive))
+        return outputMassive
+
+    def clustering(self,data):
+        mass1 = list()
+        mass2 = list()
+        mass3 = list()
+        mass4 = list()
+        mass5 = list()
+        mass6 = list()
+        mass7 = list()
+        mass8 = list()
+        cluster = KMeans(random_state=42)
+        outClusters = cluster.fit(data)
+        for x, i in zip(data, outClusters.labels_):
+            if i == 0:
+                mass1.append(x)
+            elif i == 1:
+                mass2.append(x)
+            elif i == 2:
+                mass3.append(x)
+            elif i == 3:
+                mass4.append(x)
+            elif i == 4:
+                mass5.append(x)
+            elif i == 5:
+                mass6.append(x)
+            elif i == 6:
+                mass7.append(x)
+            elif i == 7:
+                mass8.append(x)
+        u, weights1, vh = np.linalg.svd(mass1, full_matrices=False)
+        u, weights2, vh = np.linalg.svd(mass2, full_matrices=False)
+        u, weights3, vh = np.linalg.svd(mass3, full_matrices=False)
+        u, weights4, vh = np.linalg.svd(mass4, full_matrices=False)
+        u, weights5, vh = np.linalg.svd(mass5, full_matrices=False)
+        u, weights6, vh = np.linalg.svd(mass6, full_matrices=False)
+        u, weights7, vh = np.linalg.svd(mass7, full_matrices=False)
+        u, weights8, vh = np.linalg.svd(mass8, full_matrices=False)
+        weights1 = (weights1 / max(weights1) - 0.5) / 0.5
+        weights2 = (weights2 / max(weights2) - 0.5) / 0.5
+        weights3 = (weights3 / max(weights3) - 0.5) / 0.5
+        weights4 = (weights4 / max(weights4) - 0.5) / 0.5
+        weights5 = (weights5 / max(weights5) - 0.5) / 0.5
+        weights6 = (weights6 / max(weights6) - 0.5) / 0.5
+        weights7 = (weights7 / max(weights7) - 0.5) / 0.5
+        weights8 = (weights8 / max(weights8) - 0.5) / 0.5
+        out = list()
+        for x1, x2, x3, x4, x5, x6, x7, x8 in zip(weights1, weights2, weights3, weights4, weights5, weights6, weights7,
+                                                  weights8):
+            out.append(
+                [np.float(x1), np.float(x2), np.float(x3), np.float(x4), np.float(x5), np.float(x6), np.float(x7),
+                 np.float(x8)])
+        return out
 
     def setParams(self, layer_count, neuron_counter=[1], activation_function=["sigmoid"],
                   kernel_init=["random_uniform"]):
