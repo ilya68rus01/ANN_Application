@@ -31,7 +31,7 @@ class NeuralNetworkController(Controller, ABC, Callback):
 
         print("Good 2")
         self.neural_model.setParams(layer_count=int(self.view.ui.LayerCountLineEdit.text()),
-                                    neuron_counter=[20, 3, 3],
+                                    neuron_counter=[20, 24, 3],
                                     activation_function=["", "relu", "softmax"],
                                     kernel_init=["", "SVD", "zeros"])
 
