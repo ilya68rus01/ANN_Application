@@ -43,6 +43,7 @@ class NeuralNetworkModel:
         # Все еще не избавился от зависимости трех классов
         for x1, x2, x3 in zip(clustering_classes[0], clustering_classes[1], clustering_classes[2]):
             output_massive.append(x1 + x2 + x3)
+        print(output_massive)
         return output_massive
 
     def __clustering__(self,data):

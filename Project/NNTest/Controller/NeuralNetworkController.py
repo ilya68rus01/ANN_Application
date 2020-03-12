@@ -27,13 +27,17 @@ class NeuralNetworkController(Controller, ABC, Callback):
                                    n_classes=3, n_clusters_per_class=2, weights=None, flip_y=0.01, class_sep=1.0,
                                    hypercube=True, shift=0.0, scale=1.0, shuffle=True, random_state=22)
         print("Good 1")
-        self.neural_model.setDataset(inputArray=X, realClass=y)
+        self.neural_model.setDataset(inputArray=X[:10000], realClass=y[:10000])
 
         print("Good 2")
-        self.neural_model.setParams(layer_count=int(self.view.ui.LayerCountLineEdit.text()),
-                                    neuron_counter=[20, 24, 3],
+        # self.neural_model.setParams(layer_count= 4,#int(self.view.ui.LayerCountLineEdit.text()),
+        #                             neuron_counter=[20, 24, 12, 3],
+        #                             activation_function=["", "relu", "relu", "softmax"],
+        #                             kernel_init=["", "SVD", "he_normal", "he_normal"])
+        self.neural_model.setParams(layer_count=3,  # int(self.view.ui.LayerCountLineEdit.text()),
+                                    neuron_counter=[20, 11, 3],
                                     activation_function=["", "relu", "softmax"],
-                                    kernel_init=["", "SVD", "zeros"])
+                                    kernel_init=["", "he_normal", "he_normal"])
 
         print("Good 3")
 
@@ -54,7 +58,7 @@ class NeuralNetworkController(Controller, ABC, Callback):
         weights = list()
         for layer in range(np.size(self.model.layers)):
             weights.append(self.model.get_layer(index=layer).get_weights())
-            # print(self.model.get_layer(index = layer).get_weights())
+        # print(weights)
         self.view.draw_struct(weights_model=weights)
 
     def on_epoch_end(self, batch, logs={}):
@@ -62,7 +66,7 @@ class NeuralNetworkController(Controller, ABC, Callback):
         if self.counter == 2:
             for layer in range(np.size(self.model.layers)):
                 weights.append(self.model.get_layer(index=layer).get_weights())
-                print(self.model.get_layer(index=layer).get_weights())
+            print(weights)
             self.view.draw_struct(weights_model=weights)
             self.counter = 0
             self.struct = [self.model.get_layer(index=0).get_weights(), self.model.get_layer(index=1).get_weights()]

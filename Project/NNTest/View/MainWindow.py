@@ -214,6 +214,7 @@ class Ui_MainWindow():
         self.ANNlayout = QtWidgets.QVBoxLayout()
         self.ANNlayout.addWidget(self.graphic)
         self.tab_2.setLayout(self.ANNlayout)
+        self.dx = 0
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def form_for_setting(self):
@@ -239,12 +240,13 @@ class Ui_MainWindow():
 
     # Метод для визуализации структуры и весовых коэфициентов ИНС
     def draw_model(self, weights):
-        neuron_in_layer = list()
+        self.scene = QtWidgets.QGraphicsScene()
+        self.graphic.setScene(self.scene)
+        neuron_in_layer = list() #Массив количества нейронов в слоях
         neuron_in_layer.append(weights[0][0].shape[0])
         for x in weights:
             neuron_in_layer.append(x[0].shape[1])
             # возвращает количество нейронов во входном слое
-        print(neuron_in_layer[0])
         x_circle = 0
         y_circle = 0
         diameter = 30
@@ -262,10 +264,22 @@ class Ui_MainWindow():
         y1_line = 0
         x2_line = 300
         y2_line = 0
+        pen_style = QPen()
+        pen_style.setStyle(Qt.SolidLine)
+        pen_style.setWidth(1)
+        pen_style.setBrush(Qt.darkYellow)
+        print(weights[1][0])
         for i in range(np.size(neuron_in_layer) - 1):  # для количества слоев -1
             for j in range(neuron_in_layer[i]):  # для киоличества нейронов в слое
                 for k in range(neuron_in_layer[i + 1]):
-                    self.scene.addLine(x1_line, y1_line + 15, x2_line, y2_line + 15)
+                    # print(weights[i][0][j][k])
+                    if weights[i][0][j][k] > 0:
+                        pen_style.setBrush(Qt.red)
+                        pen_style.setWidth(int(10**weights[i][0][j][k]))
+                    elif weights[i][0][j][k] <= 0:
+                        pen_style.setWidth(1)
+                        pen_style.setBrush((Qt.darkBlue))
+                    self.scene.addLine(x1_line, y1_line + 15, x2_line, y2_line + 15, pen=pen_style)
                     if y2_line > 0:
                         y2_line = y2_line * -1
                     else:
