@@ -18,7 +18,8 @@ from View.AdvancedSettingsWidget import *
 
 
 class Ui_MainWindow():
-    def setupUi(self, MainWindow):
+    def __init__(self,MainWindow):
+    # def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1016, 697)
         MainWindow.setMinimumSize(QtCore.QSize(900, 650))
@@ -204,6 +205,10 @@ class Ui_MainWindow():
         self.Info_Frame.setCurrentIndex(0)
         self.AdvancedMode_rbttn.toggled['bool'].connect(self.form_for_setting)
         self.radioButton_2.setChecked(True)
+        self.pen_style = QPen()
+        self.pen_style.setStyle(Qt.SolidLine)
+        self.pen_style.setWidth(1)
+        self.pen_style.setCapStyle(Qt.RoundCap)
         self.figure = plt.figure()
         self.canvas = FigureCanvas(self.figure)
         self.training_graph_layout = QtWidgets.QVBoxLayout()
@@ -224,7 +229,6 @@ class Ui_MainWindow():
             self.AdvancedLayout.addWidget(self.wgt)
         # self.AdvancedLayout.addWidget(self.settings)
 
-
     # Метод для построения графика обучения
     def plot_history(self, data_loss, data_acc):
         # data = [np.random.random() for i in range(10)]
@@ -242,6 +246,7 @@ class Ui_MainWindow():
     def draw_model(self, weights):
         self.scene = QtWidgets.QGraphicsScene()
         self.graphic.setScene(self.scene)
+        line = QtCore.QLineF()
         neuron_in_layer = list() #Массив количества нейронов в слоях
         neuron_in_layer.append(weights[0][0].shape[0])
         for x in weights:
@@ -260,40 +265,43 @@ class Ui_MainWindow():
                     y_circle += 40
             x_circle += 300
             y_circle = 0
-        x1_line = 15
-        y1_line = 0
-        x2_line = 300
-        y2_line = 0
-        pen_style = QPen()
-        pen_style.setStyle(Qt.SolidLine)
-        pen_style.setWidth(1)
-        pen_style.setBrush(Qt.darkYellow)
+        # x1_line = 15
+        # y1_line = 0
+        # x2_line = 300
+        # y2_line = 0
+        line.setLine(15,15, 300, 15)
+        color_positive = QColor(255, 0, 0)
+        color_negative = QColor(0, 0, 255)
         print(weights[1][0])
         for i in range(np.size(neuron_in_layer) - 1):  # для количества слоев -1
             for j in range(neuron_in_layer[i]):  # для киоличества нейронов в слое
                 for k in range(neuron_in_layer[i + 1]):
                     # print(weights[i][0][j][k])
                     if weights[i][0][j][k] > 0:
-                        pen_style.setBrush(Qt.red)
-                        pen_style.setWidth(int(10**weights[i][0][j][k]))
+                        color_positive.setAlphaF(weights[i][0][j][k])
+                        self.pen_style.setColor(color_positive)
+                        self.pen_style.setWidth(int(weights[i][0][j][k] * (5 - 1) + 1))
                     elif weights[i][0][j][k] <= 0:
-                        pen_style.setWidth(1)
-                        pen_style.setBrush((Qt.darkBlue))
-                    self.scene.addLine(x1_line, y1_line + 15, x2_line, y2_line + 15, pen=pen_style)
-                    if y2_line > 0:
-                        y2_line = y2_line * -1
+                        self.pen_style.setWidth(1)
+                        color_negative.setAlphaF(weights[i][0][j][k] * -1)
+                        self.pen_style.setColor(color_negative)
+                        self.pen_style.setWidth(int(weights[i][0][j][k] * -1 * (5 - 1) + 1))
+                    self.scene.addLine(line, pen=self.pen_style)
+                    if line.y2() > 0:
+                        line.setLine(line.x1(), line.y1(), line.x2(), line.y2() * -1 - 15)
                     else:
-                        y2_line = y2_line * -1
-                        y2_line += 40
-                y2_line = 0
-                if y1_line > 0:
-                    y1_line = y1_line * -1
+                        line.setLine(line.x1(), line.y1(), line.x2(), line.y2() * -1 + 40 - 15)
+                        # y2_line += 40
+                line.setLine(line.x1(), line.y1() - 15, line.x2(), 15)
+                if line.y1() > 0:
+                    line.setLine(line.x1(), line.y1() * -1 + 15, line.x2(), line.y2())
                 else:
-                    y1_line = y1_line * -1
-                    y1_line += 40
-            x1_line += 300
-            x2_line += 300
-            y1_line = 0
+                    line.setLine(line.x1(), line.y1() * -1 + 40 + 15, line.x2(), line.y2())
+                    # y1_line += 40
+            # x1_line += 300
+            # x2_line += 300
+            # y1_line = 0
+            line.setLine(line.x1() + 300, 15, line.x2() + 300, line.y2())
         # TODO реализовать визуализацию структуры ИНС
 
     def retranslateUi(self, MainWindow):
