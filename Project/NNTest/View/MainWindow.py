@@ -29,6 +29,7 @@ class Ui_MainWindow():
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.centralwidget.sizePolicy().hasHeightForWidth())
+        self.flag = False
         self.centralwidget.setSizePolicy(sizePolicy)
         self.centralwidget.setMinimumSize(QtCore.QSize(800, 600))
         self.centralwidget.setMaximumSize(QtCore.QSize(1920, 1080))
@@ -223,10 +224,11 @@ class Ui_MainWindow():
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def form_for_setting(self):
+        self.qwe = list()
         for i in range(int(self.LayerCountLineEdit.text())):
-            self.wgt = AdvancedSettingsWidget(i)
-            # self.wgt.show()
-            self.AdvancedLayout.addWidget(self.wgt)
+            wgt = AdvancedSettingsWidget(self.centralwidget, i)
+            self.qwe.append(wgt)
+            self.AdvancedLayout.addWidget(self.qwe[i])
         # self.AdvancedLayout.addWidget(self.settings)
 
     # Метод для построения графика обучения
@@ -314,6 +316,7 @@ class Ui_MainWindow():
         self.radioButton_2.setText(_translate("MainWindow", "Простой"))
         self.AdvancedMode_rbttn.setText(_translate("MainWindow", "Расширенный"))
         self.LayerCountLabel.setText(_translate("MainWindow", "Количество слоев в нейронной сети:"))
+        self.LayerCountLineEdit.setText('0')
         self.activation_func_CBox.setItemText(0, _translate("MainWindow", "RELU"))
         self.activation_func_CBox.setItemText(1, _translate("MainWindow", "Sigmoid"))
         self.activation_func_CBox.setItemText(2, _translate("MainWindow", "ELU"))

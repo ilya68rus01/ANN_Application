@@ -1,4 +1,4 @@
-from PyQt5 import QtWidgets,QtCore
+from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QWidget
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QGridLayout, QScrollArea
@@ -9,11 +9,12 @@ from PyQt5.QtGui import QPainter, QPixmap, QPen, QColor, QFont
 from PyQt5.QtCore import Qt
 from PyQt5 import uic
 
+
 class AdvancedSettingsWidget(QWidget):
 
-    def __init__(self,i):
+    def __init__(self, parent=None, i=0):
         _translate = QtCore.QCoreApplication.translate
-        super().__init__()
+        QWidget.__init__(self, parent=parent)
         self.gridLayout = QtWidgets.QGridLayout()
         self.neuron_counter_label = QtWidgets.QLabel()
         self.neuron_counter_line = QtWidgets.QLineEdit()
@@ -21,6 +22,7 @@ class AdvancedSettingsWidget(QWidget):
         self.activation_func_cmb = QtWidgets.QComboBox()
         self.kernel_init_label = QtWidgets.QLabel()
         self.kernel_init_cmb = QtWidgets.QComboBox()
+        self.i = i
         row, col = 0, 0
         self.gridLayout.addWidget(self.neuron_counter_label, row, col)
         col += 1
@@ -38,27 +40,29 @@ class AdvancedSettingsWidget(QWidget):
         row += 1
         col = 0
         self.setLayout(self.gridLayout)
-        self.initUi(i)
+        self.initUi()
 
-    def initUi(self,i):
+    def initUi(self):
         _translate = QtCore.QCoreApplication.translate
         self.setWindowTitle(_translate("AdvancedWgt", "Конфигурация слоя"))
-        self.neuron_counter_label.setText("Количество нейронов в " + str(i+1) + " слое: ")
-        self.activation_func_cmb.setItemText(0, _translate("AdvancedWgt", "RELU"))
-        self.activation_func_cmb.setItemText(1, _translate("AdvancedWgt", "Sigmoid"))
-        self.activation_func_cmb.setItemText(2, _translate("AdvancedWgt", "ELU"))
-        self.activation_func_cmb.setItemText(3, _translate("AdvancedWgt", "Tangh"))
-        self.activation_func_cmb.setItemText(4, _translate("AdvancedWgt", "Softmax"))
+        self.neuron_counter_label.setText("Количество нейронов в " + str(self.i + 1) + " слое: ")
+        self.activation_func_cmb.addItem("RELU")
+        self.activation_func_cmb.addItem("Sigmoid")
+        self.activation_func_cmb.addItem("ELU")
+        self.activation_func_cmb.addItem("Tangh")
+        self.activation_func_cmb.addItem("Softmax")
         self.activation_func_label.setText("Функция активации: ")
         self.kernel_init_label.setText("Способ инициализации весов: ")
-        self.kernel_init_cmb.setItemText(0, _translate("AdvancedWgt", "Zeros"))
-        self.kernel_init_cmb.setItemText(1, _translate("AdvancedWgt", "Ones"))
-        self.kernel_init_cmb.setItemText(2, _translate("AdvancedWgt", "RandomNormal"))
-        self.kernel_init_cmb.setItemText(3, _translate("AdvancedWgt", "RandomUniform"))
-        self.kernel_init_cmb.setItemText(4, _translate("AdvancedWgt", "TruncatedNormal"))
-        self.kernel_init_cmb.setItemText(5, _translate("AdvancedWgt", "Lecun_uniform"))
-        self.kernel_init_cmb.setItemText(6, _translate("AdvancedWgt", "He_normal"))
-        self.kernel_init_cmb.setItemText(7, _translate("AdvancedWgt", "Lecun_normal"))
-        self.kernel_init_cmb.setItemText(8, _translate("AdvancedWgt", "He_uniform"))
-        self.kernel_init_cmb.setItemText(9, _translate("AdvancedWgt", "SVD"))
+        self.kernel_init_cmb.addItem("Zeros")
+        self.kernel_init_cmb.addItem("Ones")
+        self.kernel_init_cmb.addItem("RandomNormal")
+        self.kernel_init_cmb.addItem("RandomUniform")
+        self.kernel_init_cmb.addItem("TruncatedNormal")
+        self.kernel_init_cmb.addItem("Lecun_uniform")
+        self.kernel_init_cmb.addItem("He_normal")
+        self.kernel_init_cmb.addItem("Lecun_normal")
+        self.kernel_init_cmb.addItem("He_uniform")
+        self.kernel_init_cmb.addItem("SVD")
 
+    def get_fields(self):
+        return [self.neuron_counter_line.text(), self.activation_func_cmb.currentText(), self.kernel_init_cmb.currentText()]

@@ -40,7 +40,9 @@ class NeuralNetworkController(Controller, ABC, Callback):
                                     kernel_init=["", "he_normal", "he_normal"])
 
         print("Good 3")
-
+        print(self.view.ui.qwe[0].get_fields())
+        print(self.view.ui.qwe[1].get_fields())
+        print(self.view.ui.qwe[2].get_fields())
         train_config = TrainingConfig(
             epochs=int(self.view.ui.epoch_SpBox.text()),
             loss_func="sparse_categorical_crossentropy",
