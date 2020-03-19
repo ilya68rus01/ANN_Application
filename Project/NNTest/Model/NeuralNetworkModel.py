@@ -101,24 +101,24 @@ class NeuralNetworkModel:
     def setParams(self, layer_count, neuron_counter=[1], activation_function=["sigmoid"],
                   kernel_init=["random_uniform"]):
         self.activation_enum = {
-            'relu': keras.activations.relu,
-            'softmax': keras.activations.softmax,
-            'elu': keras.activations.elu,
-            'sigmoid': keras.activations.sigmoid,
-            'tanh': keras.activations.tanh,
+            "RELU" : keras.activations.relu,
+            "Sigmoid" : keras.activations.sigmoid,
+            "ELU" : keras.activations.elu,
+            "Tangh" : keras.activations.tanh,
+            "Softmax" : keras.activations.softmax,
             '': None
         }
         self.init_enum = {
-            'zeros': keras.initializers.Zeros,
-            'ones': keras.initializers.Ones,
-            'randomNormal': keras.initializers.RandomNormal,
-            'randomUniform': keras.initializers.RandomUniform,
-            'truncatedNormal': keras.initializers.TruncatedNormal,
-            'lecun_uniform': keras.initializers.lecun_uniform,
-            'lecun_normal': keras.initializers.lecun_normal,
-            'he_normal': 'he_normal',
-            'he_uniform': keras.initializers.he_uniform,
-            'SVD': self.SVD,
+            "Zeros": keras.initializers.Zeros,
+            "Ones": keras.initializers.Ones,
+            "RandomNormal": keras.initializers.RandomNormal,
+            "RandomUniform": keras.initializers.RandomUniform,
+            "TruncatedNormal": keras.initializers.TruncatedNormal,
+            "Lecun_uniform": keras.initializers.lecun_uniform,
+            "He_normal": 'he_normal',
+            "Lecun_normal": keras.initializers.lecun_normal,
+            "He_uniform": keras.initializers.he_uniform,
+            "SVD": self.SVD,
             '': None
         }
         self.__setLayer_count__(layer_count)

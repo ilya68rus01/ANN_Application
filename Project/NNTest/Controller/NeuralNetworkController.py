@@ -23,26 +23,35 @@ class NeuralNetworkController(Controller, ABC, Callback):
         self.thread_pool = QThreadPool()
 
     def on_start_button_click(self):
+        ##TODO Удалить это после реализации загрузки датасета
         X, y = make_classification(n_samples=100000, n_features=20, n_informative=3, n_redundant=2, n_repeated=0,
                                    n_classes=3, n_clusters_per_class=2, weights=None, flip_y=0.01, class_sep=1.0,
                                    hypercube=True, shift=0.0, scale=1.0, shuffle=True, random_state=22)
         print("Good 1")
+        ##TODO Удалить это после реализации загрузки датасета
         self.neural_model.setDataset(inputArray=X[:10000], realClass=y[:10000])
-
+        config = self.view.get_config()
+        layer_count = int(self.view.ui.LayerCountLineEdit.text())
+        neuron_counter = list()
+        activation_func = list()
+        kernel = list()
+        for x,y,z in config:
+            neuron_counter.append(int(x))
+            activation_func.append(y)
+            kernel.append(z)
+        print(neuron_counter)
         print("Good 2")
-        # self.neural_model.setParams(layer_count= 4,#int(self.view.ui.LayerCountLineEdit.text()),
-        #                             neuron_counter=[20, 24, 12, 3],
-        #                             activation_function=["", "relu", "relu", "softmax"],
-        #                             kernel_init=["", "SVD", "he_normal", "he_normal"])
-        self.neural_model.setParams(layer_count=3,  # int(self.view.ui.LayerCountLineEdit.text()),
-                                    neuron_counter=[20, 11, 3],
-                                    activation_function=["", "relu", "softmax"],
-                                    kernel_init=["", "he_normal", "he_normal"])
+        self.neural_model.setParams(layer_count=layer_count,#int(self.view.ui.LayerCountLineEdit.text()),
+                                    neuron_counter=neuron_counter,
+                                    activation_function=activation_func,
+                                    kernel_init=kernel)
+        # self.neural_model.setParams(layer_count=3,  # int(self.view.ui.LayerCountLineEdit.text()),
+        #                             neuron_counter=[20, 11, 3],
+        #                             activation_function=["", "relu", "softmax"],
+        #                             kernel_init=["", "he_normal", "he_normal"])
 
         print("Good 3")
-        print(self.view.ui.qwe[0].get_fields())
-        print(self.view.ui.qwe[1].get_fields())
-        print(self.view.ui.qwe[2].get_fields())
+
         train_config = TrainingConfig(
             epochs=int(self.view.ui.epoch_SpBox.text()),
             loss_func="sparse_categorical_crossentropy",

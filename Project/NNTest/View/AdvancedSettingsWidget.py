@@ -46,6 +46,7 @@ class AdvancedSettingsWidget(QWidget):
         _translate = QtCore.QCoreApplication.translate
         self.setWindowTitle(_translate("AdvancedWgt", "Конфигурация слоя"))
         self.neuron_counter_label.setText("Количество нейронов в " + str(self.i + 1) + " слое: ")
+        self.activation_func_cmb.addItem("")
         self.activation_func_cmb.addItem("RELU")
         self.activation_func_cmb.addItem("Sigmoid")
         self.activation_func_cmb.addItem("ELU")
@@ -53,6 +54,7 @@ class AdvancedSettingsWidget(QWidget):
         self.activation_func_cmb.addItem("Softmax")
         self.activation_func_label.setText("Функция активации: ")
         self.kernel_init_label.setText("Способ инициализации весов: ")
+        self.kernel_init_cmb.addItem("")
         self.kernel_init_cmb.addItem("Zeros")
         self.kernel_init_cmb.addItem("Ones")
         self.kernel_init_cmb.addItem("RandomNormal")
@@ -65,4 +67,5 @@ class AdvancedSettingsWidget(QWidget):
         self.kernel_init_cmb.addItem("SVD")
 
     def get_fields(self):
-        return [self.neuron_counter_line.text(), self.activation_func_cmb.currentText(), self.kernel_init_cmb.currentText()]
+        return [self.neuron_counter_line.text(), self.activation_func_cmb.currentText(),
+                self.kernel_init_cmb.currentText()]

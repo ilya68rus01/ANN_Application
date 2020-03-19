@@ -15,3 +15,9 @@ class NeuralNetworkView(QtWidgets.QMainWindow):
 
     def draw_struct(self,weights_model):
         self.ui.draw_model(weights=weights_model)
+
+    def get_config(self):
+        arr = list()
+        for i in range(int(self.ui.LayerCountLineEdit.text())):
+            arr.append(self.ui.layer_list[i].get_fields())
+        return arr
