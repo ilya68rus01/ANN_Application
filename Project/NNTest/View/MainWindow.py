@@ -194,6 +194,15 @@ class Ui_MainWindow():
         self.dx = 0
         self.scroll_area = QScrollArea()
         self.current_layers = "0"
+        ############################################################3
+        self.metrics = QtWidgets.QTableWidget()
+        self.metrics_layout = QVBoxLayout()
+        self.metrics_layout.addWidget(self.metrics)
+        self.metrics_tab.setLayout(self.metrics_layout)
+        self.metrics.setRowCount(3)
+        self.metrics.setColumnCount(5)
+        self.metrics.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        #############################################################3
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     # Что-то вроде слота для создания виджета с настройкой структуры НС
@@ -212,6 +221,9 @@ class Ui_MainWindow():
             self.scroll_area.setWidget(wgt1)
             self.scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
             self.AdvancedLayout.addWidget(self.scroll_area)
+
+    # Метод для отображения метрик
+    def write_metrics(self):
 
     # Метод для построения графика обучения
     def plot_history(self, data_loss, data_acc):
