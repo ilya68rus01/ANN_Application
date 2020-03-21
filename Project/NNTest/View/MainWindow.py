@@ -192,22 +192,26 @@ class Ui_MainWindow():
         self.ANNlayout.addWidget(self.graphic)
         self.struct_tab.setLayout(self.ANNlayout)
         self.dx = 0
+        self.scroll_area = QScrollArea()
+        self.current_layers = "0"
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+    # Что-то вроде слота для создания виджета с настройкой структуры НС
     def form_for_setting(self):
-        self.layer_list = list()
-        scroll_area = QScrollArea()
-        scroll_layout = QVBoxLayout()
-        wgt1 = QWidget()
-        for i in range(int(self.LayerCountLineEdit.text())):
-            wgt = AdvancedSettingsWidget(self.centralwidget, i)
-            self.layer_list.append(wgt)
-            scroll_layout.addWidget(self.layer_list[i])
-        wgt1.setLayout(scroll_layout)
-        scroll_area.setWidget(wgt1)
-        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
-        self.AdvancedLayout.addWidget(scroll_area)
-        # self.AdvancedLayout.addWidget(self.settings)
+        if self.AdvancedLayout.isEmpty() or not (int(self.LayerCountLineEdit.text()) == int(self.current_layers)):
+            self.current_layers = self.LayerCountLineEdit.text()
+            self.layer_list = list()
+            self.scroll_area.clearFocus()
+            scroll_layout = QVBoxLayout()
+            wgt1 = QWidget()
+            for i in range(int(self.LayerCountLineEdit.text())):
+                wgt = AdvancedSettingsWidget(self.centralwidget, i)
+                self.layer_list.append(wgt)
+                scroll_layout.addWidget(self.layer_list[i])
+            wgt1.setLayout(scroll_layout)
+            self.scroll_area.setWidget(wgt1)
+            self.scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+            self.AdvancedLayout.addWidget(self.scroll_area)
 
     # Метод для построения графика обучения
     def plot_history(self, data_loss, data_acc):
@@ -227,7 +231,7 @@ class Ui_MainWindow():
         self.scene = QtWidgets.QGraphicsScene()
         self.graphic.setScene(self.scene)
         line = QtCore.QLineF()
-        neuron_in_layer = list() #Массив количества нейронов в слоях
+        neuron_in_layer = list()  # Массив количества нейронов в слоях
         neuron_in_layer.append(weights[0][0].shape[0])
         for x in weights:
             neuron_in_layer.append(x[0].shape[1])
@@ -240,23 +244,18 @@ class Ui_MainWindow():
                 self.scene.addEllipse(x_circle, y_circle, diameter, diameter)
                 if y_circle > 0:
                     y_circle = y_circle * -1
-                else:
+                elif y_circle <= 0:
                     y_circle = y_circle * -1
                     y_circle += 40
             x_circle += 300
             y_circle = 0
-        # x1_line = 15
-        # y1_line = 0
-        # x2_line = 300
-        # y2_line = 0
-        line.setLine(15,15, 300, 15)
+        line.setLine(15, 15, 300, 15)
         color_positive = QColor(255, 0, 0)
         color_negative = QColor(0, 0, 255)
         print(weights[1][0])
         for i in range(np.size(neuron_in_layer) - 1):  # для количества слоев -1
             for j in range(neuron_in_layer[i]):  # для киоличества нейронов в слое
                 for k in range(neuron_in_layer[i + 1]):
-                    # print(weights[i][0][j][k])
                     if weights[i][0][j][k] > 0:
                         color_positive.setAlphaF(weights[i][0][j][k])
                         self.pen_style.setColor(color_positive)
@@ -267,22 +266,20 @@ class Ui_MainWindow():
                         self.pen_style.setColor(color_negative)
                         self.pen_style.setWidth(int(weights[i][0][j][k] * -1 * (5 - 1) + 1))
                     self.scene.addLine(line, pen=self.pen_style)
-                    if line.y2() > 0:
-                        line.setLine(line.x1(), line.y1(), line.x2(), line.y2() * -1 - 15)
-                    else:
-                        line.setLine(line.x1(), line.y1(), line.x2(), line.y2() * -1 + 40 - 15)
-                        # y2_line += 40
-                line.setLine(line.x1(), line.y1() - 15, line.x2(), 15)
-                if line.y1() > 0:
-                    line.setLine(line.x1(), line.y1() * -1 + 15, line.x2(), line.y2())
-                else:
-                    line.setLine(line.x1(), line.y1() * -1 + 40 + 15, line.x2(), line.y2())
-                    # y1_line += 40
-            # x1_line += 300
-            # x2_line += 300
-            # y1_line = 0
+                    if line.y2() > 15:
+                        line.setLine(line.x1(), line.y1(), line.x2(), line.y2() * -1 + 30)
+                    elif line.y2() < 15:
+                        line.setLine(line.x1(), line.y1(), line.x2(), line.y2() * -1 + 70)
+                    elif line.y2() == 15:
+                        line.setLine(line.x1(), line.y1(), line.x2(), line.y2() + 40)
+                line.setLine(line.x1(), line.y1(), line.x2(), 15)
+                if line.y1() > 15:
+                    line.setLine(line.x1(), line.y1() * -1 + 30, line.x2(), line.y2())
+                elif line.y1() < 15:
+                    line.setLine(line.x1(), line.y1() * -1 + 70, line.x2(), line.y2())
+                elif line.y1() == 15:
+                    line.setLine(line.x1(), line.y1() + 40, line.x2(), line.y2())
             line.setLine(line.x1() + 300, 15, line.x2() + 300, line.y2())
-        # TODO реализовать визуализацию структуры ИНС
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -308,4 +305,3 @@ class Ui_MainWindow():
         self.action_2.setText(_translate("MainWindow", "Создал Хрущев Илья"))
         self.actionSave_NN.setText(_translate("MainWindow", "Save ANN"))
         self.actionLoad_ANN.setText(_translate("MainWindow", "Load ANN "))
-

@@ -30,25 +30,25 @@ class NeuralNetworkController(Controller, ABC, Callback):
         print("Good 1")
         ##TODO Удалить это после реализации загрузки датасета
         self.neural_model.setDataset(inputArray=X[:10000], realClass=y[:10000])
-        config = self.view.get_config()
-        layer_count = int(self.view.ui.LayerCountLineEdit.text())
-        neuron_counter = list()
-        activation_func = list()
-        kernel = list()
-        for x,y,z in config:
-            neuron_counter.append(int(x))
-            activation_func.append(y)
-            kernel.append(z)
-        print(neuron_counter)
+        # config = self.view.get_config()
+        # layer_count = int(self.view.ui.LayerCountLineEdit.text())
+        # neuron_counter = list()
+        # activation_func = list()
+        # kernel = list()
+        # for x,y,z in config:
+        #     neuron_counter.append(int(x))
+        #     activation_func.append(y)
+        #     kernel.append(z)
+        # print(neuron_counter)
         print("Good 2")
-        self.neural_model.setParams(layer_count=layer_count,#int(self.view.ui.LayerCountLineEdit.text()),
-                                    neuron_counter=neuron_counter,
-                                    activation_function=activation_func,
-                                    kernel_init=kernel)
-        # self.neural_model.setParams(layer_count=3,  # int(self.view.ui.LayerCountLineEdit.text()),
-        #                             neuron_counter=[20, 11, 3],
-        #                             activation_function=["", "relu", "softmax"],
-        #                             kernel_init=["", "he_normal", "he_normal"])
+        # self.neural_model.setParams(layer_count=layer_count,#int(self.view.ui.LayerCountLineEdit.text()),
+        #                             neuron_counter=neuron_counter,
+        #                             activation_function=activation_func,
+        #                             kernel_init=kernel)
+        self.neural_model.setParams(layer_count=3,  # int(self.view.ui.LayerCountLineEdit.text()),
+                                    neuron_counter=[20, 11, 3],
+                                    activation_function=["", "RELU", "Softmax"],
+                                    kernel_init=["", "He_normal", "He_normal"])
 
         print("Good 3")
 

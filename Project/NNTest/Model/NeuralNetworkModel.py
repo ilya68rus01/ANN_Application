@@ -203,6 +203,7 @@ class NeuralNetworkModel:
     def trainNeuralNetwork(self):
         # Плохой вариант реализации добавдения первого слоя
         # activation=[None,keras.activations.relu,keras.activations.softmax]
+        print("GOOD5")
         i = 1
         self.model.add(keras.layers.Input(
             self.inputArray.shape[1]))  # вот это клевый будет вариант, если не задано количество входных нейронов
