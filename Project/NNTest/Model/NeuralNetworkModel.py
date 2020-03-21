@@ -199,6 +199,12 @@ class NeuralNetworkModel:
     def get_history(self):
         return [self.info.history['loss'], self.info.history['accuracy']]
 
+    def get_metrics(self):
+        data = self.model.evaluate(x=self.inputArray,y=self.realClass)[1]
+        print(data)
+        return data
+
+
     # Метод для обучения нейронки
     def trainNeuralNetwork(self):
         # Плохой вариант реализации добавдения первого слоя

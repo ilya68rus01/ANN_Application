@@ -199,8 +199,6 @@ class Ui_MainWindow():
         self.metrics_layout = QVBoxLayout()
         self.metrics_layout.addWidget(self.metrics)
         self.metrics_tab.setLayout(self.metrics_layout)
-        self.metrics.setRowCount(3)
-        self.metrics.setColumnCount(5)
         self.metrics.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         #############################################################3
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -223,7 +221,13 @@ class Ui_MainWindow():
             self.AdvancedLayout.addWidget(self.scroll_area)
 
     # Метод для отображения метрик
-    def write_metrics(self):
+    def write_metrics(self, data):
+        self.metrics.setRowCount(2)
+        self.metrics.setColumnCount(1)
+        newItem = QtWidgets.QTableWidgetItem("Accuracy")
+        self.metrics.setItem(0, 0, newItem)
+        newItem = QtWidgets.QTableWidgetItem(str(data))
+        self.metrics.setItem(1, 0, newItem)
 
     # Метод для построения графика обучения
     def plot_history(self, data_loss, data_acc):

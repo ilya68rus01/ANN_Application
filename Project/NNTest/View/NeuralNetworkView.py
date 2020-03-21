@@ -21,3 +21,6 @@ class NeuralNetworkView(QtWidgets.QMainWindow):
         for i in range(int(self.ui.LayerCountLineEdit.text())):
             arr.append(self.ui.layer_list[i].get_fields())
         return arr
+
+    def metrics_vizualization(self, metric):
+        self.ui.write_metrics(data=metric)

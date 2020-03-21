@@ -72,6 +72,7 @@ class NeuralNetworkController(Controller, ABC, Callback):
         # print(weights)
         self.view.draw_struct(weights_model=weights)
 
+
     def on_epoch_end(self, batch, logs={}):
         weights = list()
         if self.counter == 2:
@@ -102,15 +103,14 @@ class Worker(QRunnable):
     @pyqtSlot()
     def run(self):
         try:
-            result = self.neural_model.trainNeuralNetwork()
-
             # было это, но теперь так не поканает. Посмотри что тебе приходит в конце обучения ожной эпохи
             # может быть оттуда сможешь достать данные. Ну короче поковыряй
             # data_loss, data_acc = self.neural_model.get_history()
             # self.view.plot(data_loss=data_loss, data_acc=data_acc)
-
-            history = result.history
+            history = self.neural_model.trainNeuralNetwork().history
+            metrics = self.neural_model.get_metrics()
             self.view.plot(data_loss=history["loss"], data_acc=history["accuracy"])
+            self.view.metrics_vizualization(metric=metrics)
         finally:
             self.signals.finished.emit()
 
