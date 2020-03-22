@@ -15,6 +15,7 @@ from PyQt5.QtGui import QPainter, QPixmap, QPen, QColor, QFont
 from PyQt5.QtCore import Qt
 from PyQt5 import uic
 from View.AdvancedSettingsWidget import *
+from View.DialogFileWidget import *
 
 
 class Ui_MainWindow():
@@ -169,6 +170,7 @@ class Ui_MainWindow():
         self.menuFile.addAction(self.actionOpen)
         self.menuFile.addAction(self.actionSave_NN)
         self.menuFile.addAction(self.actionLoad_ANN)
+        self.actionOpen.triggered.connect(self.load_datasets)
         self.menuInfo.addSeparator()
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuHelp.menuAction())
@@ -202,6 +204,11 @@ class Ui_MainWindow():
         self.metrics.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         #############################################################3
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def load_datasets(self):
+        self.file_widget = DialogFileWidget()
+        self.file_widget.show()
+        print("Its work!")
 
     # Что-то вроде слота для создания виджета с настройкой структуры НС
     def form_for_setting(self):
