@@ -6,6 +6,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 import numpy as np
+import pandas as pd
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QGridLayout, QScrollArea, QVBoxLayout
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -208,7 +209,17 @@ class Ui_MainWindow():
     def load_datasets(self):
         self.file_widget = DialogFileWidget()
         self.file_widget.show()
+        self.file_widget.open_button.clicked.connect(self.get_data)
         print("Its work!")
+
+    def get_data(self):
+        data = self.file_widget.file_data
+        print(np.shape(data))
+        table = QtWidgets.QTableWidget()
+        layout = QtWidgets.QHBoxLayout()
+        layout.addWidget(table)
+        self.data_tab.setLayout(layout)
+
 
     # Что-то вроде слота для создания виджета с настройкой структуры НС
     def form_for_setting(self):
