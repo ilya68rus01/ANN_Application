@@ -17,6 +17,7 @@ from PyQt5.QtCore import Qt
 from PyQt5 import uic
 from View.AdvancedSettingsWidget import *
 from View.DialogFileWidget import *
+from View.CustomPandasModel import *
 
 
 class Ui_MainWindow():
@@ -203,6 +204,7 @@ class Ui_MainWindow():
         self.metrics_layout.addWidget(self.metrics)
         self.metrics_tab.setLayout(self.metrics_layout)
         self.metrics.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.table_view = QtWidgets.QTableView()
         #############################################################3
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -213,12 +215,20 @@ class Ui_MainWindow():
         print("Its work!")
 
     def get_data(self):
-        data = self.file_widget.file_data
-        print(np.shape(data))
-        table = QtWidgets.QTableWidget()
+        model = DataFrameModel(self.file_widget.file_data)
         layout = QtWidgets.QHBoxLayout()
-        layout.addWidget(table)
+        self.table_view.setModel(model)
+        layout.addWidget(self.table_view)
         self.data_tab.setLayout(layout)
+
+
+
+        # data = self.file_widget.file_data
+        # print(np.shape(data))
+        # table = QtWidgets.QTableWidget()
+        # layout = QtWidgets.QHBoxLayout()
+        # layout.addWidget(table)
+        # self.data_tab.setLayout(layout)
 
 
     # Что-то вроде слота для создания виджета с настройкой структуры НС

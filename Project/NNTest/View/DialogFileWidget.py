@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 from PyQt5.QtGui import QPainter, QPixmap, QPen, QColor, QFont
 from PyQt5.QtCore import Qt, QDir, QModelIndex
 from PyQt5 import uic
+import pandas as pd
 
 
 class DialogFileWidget(QWidget):
@@ -25,7 +26,8 @@ class DialogFileWidget(QWidget):
         self.file_model = QtWidgets.QFileSystemModel()
         self.file_model.setFilter(QDir.AllEntries)
         self.file_model.setRootPath("")
-        self.file_data = list()
+        self.file_data = list(list())
+        self.test_data = None
         self.list_view.setModel(self.file_model)
 
         horizontal_layout = QtWidgets.QHBoxLayout()
@@ -67,17 +69,9 @@ class DialogFileWidget(QWidget):
             self.path_line_edit.setText(str(dir.absolutePath())+"/"+file_info.fileName())
 
     def ok_button_clicked(self):
-        with open(self.path_line_edit.text(), mode='r') as f:
-            file = f.read().splitlines()
-        for x in file:
-            print(x)
-            # self.file_data.append(x)
+        self.file_data = pd.read_csv(self.path_line_edit.text(), delimiter=';')
         print(self.file_data)
-        # if self.path_line_edit.text() != "":
-        #     file = open(self.path_line_edit.text(), mode="r", encoding='utf8')
-        #     self.file_data = file.read()
-        #     file.close()
-        #     self.close()
+        self.close()
 
     def cancel_button_clicked(self):
         self.close()
