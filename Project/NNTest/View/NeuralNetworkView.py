@@ -13,6 +13,12 @@ class NeuralNetworkView(QtWidgets.QMainWindow):
     def set_on_click_listener(self, action):
         self.ui.Start_Button.clicked.connect(action)
 
+    def set_save_click_listener(self, action):
+        self.ui.save_wgt.open_button.clicked.connect(action)
+
+    def set_on_load_click_listener(self, action):
+        self.ui.ann_loader.open_button.clicked.connect(action)
+
     def draw_struct(self,weights_model):
         self.ui.draw_model(weights=weights_model)
 

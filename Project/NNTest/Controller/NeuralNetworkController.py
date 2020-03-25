@@ -18,6 +18,8 @@ class NeuralNetworkController(Controller, ABC, Callback):
         self.view = view
         self.neural_model = model
         self.view.set_on_click_listener(lambda: self.on_start_button_click())
+        self.view.set_save_click_listener(lambda: self.on_save_button_click())
+        self.view.set_on_load_click_listener(lambda: self.on_load_button_click())
         self.view.show()
         self.neural_model.after_epochs_end_callback = self
         self.thread_pool = QThreadPool()
@@ -70,6 +72,18 @@ class NeuralNetworkController(Controller, ABC, Callback):
         self.neural_model.setTrainConfig(train_config)
         self.thread_pool.start(worker)
         print("Good 4")
+
+    def on_load_button_click(self):
+        self.neural_model.load_model(path=str(self.view.ui.ann_loader.path_line_edit.text()))
+        self.view.ui.ann_loader.close()
+        weights = list()
+        for layer in range(np.size(self.neural_model.model.layers)):
+            weights.append(self.neural_model.model.get_layer(index=layer).get_weights())
+        self.view.draw_struct(weights_model=weights)
+
+    def on_save_button_click(self):
+        self.neural_model.save_model(path=str(self.view.ui.save_wgt.path_line_edit.text()))
+        self.view.ui.save_wgt.close()
 
     def on_train_end(self, logs={}):
         weights = list()

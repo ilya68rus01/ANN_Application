@@ -172,14 +172,12 @@ class Ui_MainWindow():
         self.menuFile.addAction(self.actionOpen)
         self.menuFile.addAction(self.actionSave_NN)
         self.menuFile.addAction(self.actionLoad_ANN)
-        self.actionOpen.triggered.connect(self.load_datasets)
         self.menuInfo.addSeparator()
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuHelp.menuAction())
         self.menubar.addAction(self.menuInfo.menuAction())
         self.retranslateUi(MainWindow)
         self.Info_Frame.setCurrentIndex(0)
-        self.advanced_rbtn.toggled['bool'].connect(self.form_for_setting)
         self.simple_rbtn.setChecked(True)
         self.pen_style = QPen()
         self.pen_style.setStyle(Qt.SolidLine)
@@ -198,6 +196,13 @@ class Ui_MainWindow():
         self.dx = 0
         self.scroll_area = QScrollArea()
         self.current_layers = "0"
+        self.save_wgt = DialogFileWidget('saver')
+        self.ann_loader = DialogFileWidget(type='ann_loader')
+
+        self.advanced_rbtn.toggled['bool'].connect(self.form_for_setting)
+        self.actionOpen.triggered.connect(self.load_datasets)
+        self.actionLoad_ANN.triggered.connect(self.loadANN)
+        self.actionSave_NN.triggered.connect(self.save_ANN)
         ############################################################3
         self.metrics = QtWidgets.QTableWidget()
         self.metrics_layout = QVBoxLayout()
@@ -208,11 +213,16 @@ class Ui_MainWindow():
         #############################################################3
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+    def loadANN(self):
+        self.ann_loader.show()
+
+    def save_ANN(self):
+        self.save_wgt.show()
+
     def load_datasets(self):
-        self.file_widget = DialogFileWidget()
+        self.file_widget = DialogFileWidget(type='data_loader')
         self.file_widget.show()
         self.file_widget.open_button.clicked.connect(self.display_data)
-        print("Its work!")
 
     def display_data(self):
         model = DataFrameModel(self.file_widget.file_data)

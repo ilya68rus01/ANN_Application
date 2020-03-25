@@ -12,7 +12,8 @@ class NeuralNetworkModel:
     after_epochs_end_callback = Callback
 
     def __init__(self):
-        self.model = keras.models.Sequential()
+        self.model = None
+        # self.model = keras.models.Sequential()
 
     # Собственная функция для инициализации весов
     def SVD(self, shape, dtype=None):
@@ -125,7 +126,7 @@ class NeuralNetworkModel:
         self.__setNeuron_counter__(neuron_counter)
         self.__setKernel_init__(kernel_init)
         self.__setActivationFunc__(activation_function)
-        self.model = keras.models.Sequential()
+        # self.model = keras.models.Sequential()
 
     def setDataset(self, inputArray, realClass):
         self.inputArray = inputArray
@@ -204,23 +205,27 @@ class NeuralNetworkModel:
         print(data)
         return data
 
-
     # Метод для обучения нейронки
     def trainNeuralNetwork(self):
         # Плохой вариант реализации добавдения первого слоя
         # activation=[None,keras.activations.relu,keras.activations.softmax]
-        print("GOOD5")
-        i = 1
-        self.model.add(keras.layers.Input(
-            self.inputArray.shape[1]))  # вот это клевый будет вариант, если не задано количество входных нейронов
-        while i != self.layer_count:
-            self.model.add(keras.layers.Dense(self.neuron_counter[i], activation=self.activation_function[i],
-                                              kernel_initializer=self.kernel_init[i]))
-            i = i + 1
-        # Незнаю тут врядли можно что придумать просто задаю значения параметров по факту
-        self.model.compile(loss=self.loss, optimizer=self.optimizer, metrics=self.metrics)
-        self.info = self.model.fit(self.inputArray, self.realClass, epochs=self.epochs,
-                                   validation_split=0.1, callbacks=[self.after_epochs_end_callback])
+        if self.model is None:
+            self.model = keras.models.Sequential()
+            i = 1
+            self.model.add(keras.layers.Input(
+                self.inputArray.shape[1]))  # вот это клевый будет вариант, если не задано количество входных нейронов
+            while i != self.layer_count:
+                self.model.add(keras.layers.Dense(self.neuron_counter[i], activation=self.activation_function[i],
+                                                  kernel_initializer=self.kernel_init[i]))
+                i = i + 1
+            # Незнаю тут врядли можно что придумать просто задаю значения параметров по факту
+            self.model.compile(loss=self.loss, optimizer=self.optimizer, metrics=self.metrics)
+            self.info = self.model.fit(self.inputArray, self.realClass, epochs=self.epochs,
+                                       validation_split=0.1, callbacks=[self.after_epochs_end_callback])
+        else:
+            self.model.compile(loss=self.loss, optimizer=self.optimizer, metrics=self.metrics)
+            self.info = self.model.fit(self.inputArray, self.realClass, epochs=self.epochs,
+                                       validation_split=0.1, callbacks=[self.after_epochs_end_callback])
         return self.info
 
     def setTrainConfig(self, train_config):
@@ -228,3 +233,10 @@ class NeuralNetworkModel:
         self.__setLoss__(train_config.loss_func)
         self.__setOptimizer__(train_config.optimizer)
         self.__setMetrics__(train_config.metrics)
+
+    def save_model(self, path=None):
+        self.model.save(path)
+
+    def load_model(self, path=None):
+        self.model = keras.models.load_model(path)
+
