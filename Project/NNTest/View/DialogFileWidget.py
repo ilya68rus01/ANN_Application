@@ -26,8 +26,7 @@ class DialogFileWidget(QWidget):
         self.file_model = QtWidgets.QFileSystemModel()
         self.file_model.setFilter(QDir.AllEntries)
         self.file_model.setRootPath("")
-        self.file_data = list(list())
-        self.test_data = None
+        self.file_data = None
         self.list_view.setModel(self.file_model)
 
         horizontal_layout = QtWidgets.QHBoxLayout()
@@ -70,7 +69,6 @@ class DialogFileWidget(QWidget):
 
     def ok_button_clicked(self):
         self.file_data = pd.read_csv(self.path_line_edit.text(), delimiter=';')
-        print(self.file_data)
         self.close()
 
     def cancel_button_clicked(self):

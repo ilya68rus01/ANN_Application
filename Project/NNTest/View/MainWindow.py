@@ -211,16 +211,18 @@ class Ui_MainWindow():
     def load_datasets(self):
         self.file_widget = DialogFileWidget()
         self.file_widget.show()
-        self.file_widget.open_button.clicked.connect(self.get_data)
+        self.file_widget.open_button.clicked.connect(self.display_data)
         print("Its work!")
 
-    def get_data(self):
+    def display_data(self):
         model = DataFrameModel(self.file_widget.file_data)
         layout = QtWidgets.QHBoxLayout()
         self.table_view.setModel(model)
         layout.addWidget(self.table_view)
         self.data_tab.setLayout(layout)
 
+    def get_data(self):
+        return self.file_widget.file_data
 
 
         # data = self.file_widget.file_data

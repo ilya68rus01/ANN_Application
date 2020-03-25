@@ -27,9 +27,16 @@ class NeuralNetworkController(Controller, ABC, Callback):
         X, y = make_classification(n_samples=100000, n_features=20, n_informative=3, n_redundant=2, n_repeated=0,
                                    n_classes=3, n_clusters_per_class=2, weights=None, flip_y=0.01, class_sep=1.0,
                                    hypercube=True, shift=0.0, scale=1.0, shuffle=True, random_state=22)
-        print("Good 1")
         ##TODO Удалить это после реализации загрузки датасета
-        self.neural_model.setDataset(inputArray=X[:10000], realClass=y[:10000])
+
+        ############################# подхватывает данные из вьюхи и преобразовывает в numpy объект
+        # dataset = self.view.ui.get_data()
+        # X = dataset.drop("predict",axis=1)
+        # X = X.to_numpy()
+        # y = dataset['predict'].to_numpy()
+        #############################
+        self.neural_model.setDataset(inputArray=X, realClass=y)
+        ##################################################### Загрузка параметров обучения из вьюхи
         # config = self.view.get_config()
         # layer_count = int(self.view.ui.LayerCountLineEdit.text())
         # neuron_counter = list()
@@ -39,18 +46,18 @@ class NeuralNetworkController(Controller, ABC, Callback):
         #     neuron_counter.append(int(x))
         #     activation_func.append(y)
         #     kernel.append(z)
-        # print(neuron_counter)
-        print("Good 2")
+        #####################################################
+        # код для установки параметров из GUI
         # self.neural_model.setParams(layer_count=layer_count,#int(self.view.ui.LayerCountLineEdit.text()),
         #                             neuron_counter=neuron_counter,
         #                             activation_function=activation_func,
         #                             kernel_init=kernel)
+
         self.neural_model.setParams(layer_count=3,  # int(self.view.ui.LayerCountLineEdit.text()),
-                                    neuron_counter=[20, 11, 3],
+                                    neuron_counter=[20, 12, 3],
                                     activation_function=["", "RELU", "Softmax"],
                                     kernel_init=["", "He_normal", "He_normal"])
 
-        print("Good 3")
 
         train_config = TrainingConfig(
             epochs=int(self.view.ui.epoch_SpBox.text()),
@@ -61,7 +68,6 @@ class NeuralNetworkController(Controller, ABC, Callback):
 
         worker = Worker(self.neural_model, self.view)
         self.neural_model.setTrainConfig(train_config)
-        # self.neural_model.trainNeuralNetwork()
         self.thread_pool.start(worker)
         print("Good 4")
 
@@ -69,7 +75,6 @@ class NeuralNetworkController(Controller, ABC, Callback):
         weights = list()
         for layer in range(np.size(self.model.layers)):
             weights.append(self.model.get_layer(index=layer).get_weights())
-        # print(weights)
         self.view.draw_struct(weights_model=weights)
 
 
@@ -78,7 +83,6 @@ class NeuralNetworkController(Controller, ABC, Callback):
         if self.counter == 2:
             for layer in range(np.size(self.model.layers)):
                 weights.append(self.model.get_layer(index=layer).get_weights())
-            print(weights)
             self.view.draw_struct(weights_model=weights)
             self.counter = 0
             self.struct = [self.model.get_layer(index=0).get_weights(), self.model.get_layer(index=1).get_weights()]
