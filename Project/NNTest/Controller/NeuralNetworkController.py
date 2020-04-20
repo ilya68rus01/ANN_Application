@@ -26,39 +26,41 @@ class NeuralNetworkController(Controller, ABC, Callback):
 
     def on_start_button_click(self):
         ##TODO Удалить это после реализации загрузки датасета
-        X, y = make_classification(n_samples=100000, n_features=20, n_informative=3, n_redundant=2, n_repeated=0,
-                                   n_classes=3, n_clusters_per_class=2, weights=None, flip_y=0.01, class_sep=1.0,
-                                   hypercube=True, shift=0.0, scale=1.0, shuffle=True, random_state=22)
+        # X, y = make_classification(n_samples=100000, n_features=20, n_informative=3, n_redundant=2, n_repeated=0,
+        #                            n_classes=3, n_clusters_per_class=2, weights=None, flip_y=0.01, class_sep=1.0,
+        #                            hypercube=True, shift=0.0, scale=1.0, shuffle=True, random_state=22)
         ##TODO Удалить это после реализации загрузки датасета
 
         ############################# подхватывает данные из вьюхи и преобразовывает в numpy объект
-        # dataset = self.view.ui.get_data()
-        # X = dataset.drop("predict",axis=1)
-        # X = X.to_numpy()
-        # y = dataset['predict'].to_numpy()
+        dataset = self.view.ui.get_data()
+        X = dataset.drop("predict",axis=1)
+        X = X.to_numpy()
+        y = dataset['predict'].to_numpy()
         #############################
+
         self.neural_model.setDataset(inputArray=X, realClass=y)
+
         ##################################################### Загрузка параметров обучения из вьюхи
-        # config = self.view.get_config()
-        # layer_count = int(self.view.ui.LayerCountLineEdit.text())
-        # neuron_counter = list()
-        # activation_func = list()
-        # kernel = list()
-        # for x,y,z in config:
-        #     neuron_counter.append(int(x))
-        #     activation_func.append(y)
-        #     kernel.append(z)
+        config = self.view.get_config()
+        layer_count = int(self.view.ui.LayerCountLineEdit.text())
+        neuron_counter = list()
+        activation_func = list()
+        kernel = list()
+        for x,y,z in config:
+            neuron_counter.append(int(x))
+            activation_func.append(y)
+            kernel.append(z)
         #####################################################
         # код для установки параметров из GUI
-        # self.neural_model.setParams(layer_count=layer_count,#int(self.view.ui.LayerCountLineEdit.text()),
-        #                             neuron_counter=neuron_counter,
-        #                             activation_function=activation_func,
-        #                             kernel_init=kernel)
-
-        self.neural_model.setParams(layer_count=3,  # int(self.view.ui.LayerCountLineEdit.text()),
-                                    neuron_counter=[20, 12, 3],
-                                    activation_function=["", "RELU", "Softmax"],
-                                    kernel_init=["", "He_normal", "He_normal"])
+        self.neural_model.setParams(layer_count=layer_count,#int(self.view.ui.LayerCountLineEdit.text()),
+                                    neuron_counter=neuron_counter,
+                                    activation_function=activation_func,
+                                    kernel_init=kernel)
+        ###################Установка параметров автоматически
+        # self.neural_model.setParams(layer_count=3,  # int(self.view.ui.LayerCountLineEdit.text()),
+        #                             neuron_counter=[20, 24, 3],
+        #                             activation_function=["", "RELU", "Softmax"],
+        #                             kernel_init=["", "He_normal", "He_normal"])
 
 
         train_config = TrainingConfig(
@@ -71,7 +73,6 @@ class NeuralNetworkController(Controller, ABC, Callback):
         worker = Worker(self.neural_model, self.view)
         self.neural_model.setTrainConfig(train_config)
         self.thread_pool.start(worker)
-        print("Good 4")
 
     def on_load_button_click(self):
         self.neural_model.load_model(path=str(self.view.ui.ann_loader.path_line_edit.text()))

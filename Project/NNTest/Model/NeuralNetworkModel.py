@@ -5,7 +5,9 @@ import tensorflow as tf
 from keras.callbacks import Callback
 from tensorflow import keras
 from sklearn.cluster import KMeans
+from svd import *
 from Model.WeightsCallback import *
+from svd.svd import *
 
 
 class NeuralNetworkModel:
@@ -75,14 +77,26 @@ class NeuralNetworkModel:
                 mass7.append(x)
             elif i == 7:
                 mass8.append(x)
-        u, weights1, vh = np.linalg.svd(mass1, full_matrices=False)
-        u, weights2, vh = np.linalg.svd(mass2, full_matrices=False)
-        u, weights3, vh = np.linalg.svd(mass3, full_matrices=False)
-        u, weights4, vh = np.linalg.svd(mass4, full_matrices=False)
-        u, weights5, vh = np.linalg.svd(mass5, full_matrices=False)
-        u, weights6, vh = np.linalg.svd(mass6, full_matrices=False)
-        u, weights7, vh = np.linalg.svd(mass7, full_matrices=False)
-        u, weights8, vh = np.linalg.svd(mass8, full_matrices=False)
+        u, s, v = svd(mass1)
+        print("Матрица U:",u)
+        print("Матрица S:",s)
+        print("Матрица V:",v)
+        weights1, u, v = svd(mass1)
+        weights2, u, v = svd(mass2)
+        weights3, u, v = svd(mass3)
+        weights4, u, v = svd(mass4)
+        weights5, u, v = svd(mass5)
+        weights6, u, v = svd(mass6)
+        weights7, u, v = svd(mass7)
+        weights8, u, v = svd(mass8)
+        #weights1 = np.linalg.svd(mass1, full_matrices=False, compute_uv=False)
+        #weights2 = np.linalg.svd(mass2, full_matrices=False, compute_uv=False)
+        #weights3 = np.linalg.svd(mass3, full_matrices=False, compute_uv=False)
+        #weights4 = np.linalg.svd(mass4, full_matrices=False, compute_uv=False)
+        #weights5 = np.linalg.svd(mass5, full_matrices=False, compute_uv=False)
+        #weights6 = np.linalg.svd(mass6, full_matrices=False, compute_uv=False)
+        #weights7 = np.linalg.svd(mass7, full_matrices=False, compute_uv=False)
+        #weights8 = np.linalg.svd(mass8, full_matrices=False, compute_uv=False)
         weights1 = (weights1 / max(weights1) - 0.5) / 0.5
         weights2 = (weights2 / max(weights2) - 0.5) / 0.5
         weights3 = (weights3 / max(weights3) - 0.5) / 0.5
