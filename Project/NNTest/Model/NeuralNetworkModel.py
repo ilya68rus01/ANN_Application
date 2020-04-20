@@ -46,7 +46,7 @@ class NeuralNetworkModel:
         # Все еще не избавился от зависимости трех классов
         for x1, x2, x3 in zip(clustering_classes[0], clustering_classes[1], clustering_classes[2]):
             output_massive.append(x1 + x2 + x3)
-        print(output_massive)
+            print(x1 + x2 + x3)
         return output_massive
 
     def __clustering__(self,data):
@@ -89,14 +89,7 @@ class NeuralNetworkModel:
         weights6, u, v = svd(mass6)
         weights7, u, v = svd(mass7)
         weights8, u, v = svd(mass8)
-        #weights1 = np.linalg.svd(mass1, full_matrices=False, compute_uv=False)
-        #weights2 = np.linalg.svd(mass2, full_matrices=False, compute_uv=False)
-        #weights3 = np.linalg.svd(mass3, full_matrices=False, compute_uv=False)
-        #weights4 = np.linalg.svd(mass4, full_matrices=False, compute_uv=False)
-        #weights5 = np.linalg.svd(mass5, full_matrices=False, compute_uv=False)
-        #weights6 = np.linalg.svd(mass6, full_matrices=False, compute_uv=False)
-        #weights7 = np.linalg.svd(mass7, full_matrices=False, compute_uv=False)
-        #weights8 = np.linalg.svd(mass8, full_matrices=False, compute_uv=False)
+
         weights1 = (weights1 / max(weights1) - 0.5) / 0.5
         weights2 = (weights2 / max(weights2) - 0.5) / 0.5
         weights3 = (weights3 / max(weights3) - 0.5) / 0.5
@@ -143,8 +136,10 @@ class NeuralNetworkModel:
         # self.model = keras.models.Sequential()
 
     def setDataset(self, inputArray, realClass):
-        self.inputArray = inputArray
-        self.realClass = realClass
+        self.inputArray = inputArray[:70000]
+        self.realClass = realClass[:70000]
+        self.X_test = inputArray[70000:]
+        self.y_test = realClass[70000:]
 
     def __setLayer_count__(self, layer_count):
         if layer_count > 0:
@@ -215,7 +210,7 @@ class NeuralNetworkModel:
         return [self.info.history['loss'], self.info.history['accuracy']]
 
     def get_metrics(self):
-        data = self.model.evaluate(x=self.inputArray,y=self.realClass)[1]
+        data = self.model.evaluate(x=self.X_test, y=self.y_test)[1]
         print(data)
         return data
 
