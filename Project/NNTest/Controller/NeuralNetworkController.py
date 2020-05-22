@@ -28,18 +28,27 @@ class NeuralNetworkController(Controller, ABC, Callback):
         self.thread_pool = QThreadPool()
 
     def on_start_button_click(self):
-        ##TODO Удалить это после реализации загрузки датасета
-        X, y = make_classification(n_samples=100000, n_features=20, n_informative=3, n_redundant=2, n_repeated=0,
-                                   n_classes=3, n_clusters_per_class=2, weights=None, flip_y=0.01, class_sep=1.0,
-                                   hypercube=True, shift=0.0, scale=1.0, shuffle=True, random_state=30)
-        ##TODO Удалить это после реализации загрузки датасета
-        #############################
+        dataset = self.view.ui.get_data()
+        X = dataset.drop("predict", axis=1)
+        X = X.to_numpy()
+        y = dataset['predict'].to_numpy()
         try:
-            self.neural_model.set_data_for_learning(inputArray=X, realClass=y)
-            self.neural_model.set_ANN_params(layer_count=3,
-                                             neuron_counter=[20, 24, 3],
-                                             activation_function=["", "RELU", "Softmax"],
-                                             kernel_init=["", "SVD", "He_normal"])
+            self.neural_model.setDataset(inputArray=X, realClass=y)
+            config = self.view.get_config()
+            layer_count = int(self.view.ui.LayerCountLineEdit.text())
+            neuron_counter = list()
+            activation_func = list()
+            kernel = list()
+            for x, y, z in config:
+                neuron_counter.append(int(x))
+                activation_func.append(y)
+                kernel.append(z)
+            #####################################################
+            # код для установки параметров из GUI
+            self.neural_model.set_ANN_params(layer_count=layer_count,
+                                             neuron_counter=neuron_counter,
+                                             activation_function=activation_func,
+                                             kernel_init=kernel)
             train_config = TrainingConfig(
                 epochs=int(self.view.main_window.epoch_SpBox.text()),
                 loss_func="sparse_categorical_crossentropy",

@@ -38,7 +38,6 @@ class NeuralNetworkModel:
             '': None
         }
 
-    # Метод для обучения ИНН
     def train_ANN(self):
         if self.model is None:
             self.__set_layer_params__()
@@ -56,7 +55,8 @@ class NeuralNetworkModel:
 
     def __learn_model__(self):
         self.model.compile(loss=self.loss, optimizer=self.optimizer, metrics=self.metrics)
-        info = self.model.fit(self.inputArray, self.realClass, epochs=self.epochs, validation_split=0.1, callbacks=[self.after_epochs_end_callback])
+        info = self.model.fit(self.inputArray, self.realClass, epochs=self.epochs,
+                              validation_split=0.1, callbacks=[self.after_epochs_end_callback])
         return info
 
     # Собственная функция для инициализации весов
