@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'MainWindow_v2.ui'
+# Form implementation generated from reading main_window file 'MainWindow_v2.main_window'
 #
 # Created by: PyQt5 UI code generator 5.13.0
 #
@@ -8,7 +8,8 @@
 import numpy as np
 import pandas as pd
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QGridLayout, QScrollArea, QVBoxLayout
+from PyQt5.QtWidgets import QGridLayout, QScrollArea, QVBoxLayout, QErrorMessage
+from PyQt5.QtWidgets import QDialog
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
@@ -193,7 +194,6 @@ class Ui_MainWindow():
         self.ANNlayout = QtWidgets.QVBoxLayout()
         self.ANNlayout.addWidget(self.graphic)
         self.struct_tab.setLayout(self.ANNlayout)
-        self.dx = 0
         self.scroll_area = QScrollArea()
         self.current_layers = "0"
         self.save_wgt = DialogFileWidget('saver')
@@ -219,6 +219,11 @@ class Ui_MainWindow():
     def save_ANN(self):
         self.save_wgt.show()
 
+    def dialog_window_error_value(self, error_message):
+        dialog_window = QErrorMessage(self.centralwidget)
+        dialog_window.setModal(True)
+        dialog_window.showMessage(error_message)
+
     def load_datasets(self):
         self.file_widget = DialogFileWidget(type='data_loader')
         self.file_widget.show()
@@ -233,15 +238,6 @@ class Ui_MainWindow():
 
     def get_data(self):
         return self.file_widget.file_data
-
-
-        # data = self.file_widget.file_data
-        # print(np.shape(data))
-        # table = QtWidgets.QTableWidget()
-        # layout = QtWidgets.QHBoxLayout()
-        # layout.addWidget(table)
-        # self.data_tab.setLayout(layout)
-
 
     # Что-то вроде слота для создания виджета с настройкой структуры НС
     def form_for_setting(self):
@@ -277,8 +273,11 @@ class Ui_MainWindow():
         # instead of ax.hold(False)
         self.figure.clear()
         ax = self.figure.add_subplot(111)
-        ax.plot(data_loss, '*-')
-        ax.plot(data_acc, '.-g')
+        ax.plot(data_loss, '*-', label="Loss")
+        ax.plot(data_acc, '.-g', label="Accuracy")
+        ax.set_xlabel('Epoch')
+        ax.grid(True)
+        ax.legend()
         # refresh canvas
         self.canvas.draw()
 

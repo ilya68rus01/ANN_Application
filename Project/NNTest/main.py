@@ -7,8 +7,7 @@ from Controller.NeuralNetworkController import NeuralNetworkController, NeuralNe
 
 def main():
     app = QApplication(sys.argv)
-
-    # создаём контроллер и передаём ему ссылку на модель и отображение
+    # Инициализация контроллера с заданием модели и представления
     NeuralNetworkController(model=NeuralNetworkModel(), view=NeuralNetworkView())
     app.exec()
 

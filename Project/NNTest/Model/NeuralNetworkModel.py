@@ -15,41 +15,89 @@ class NeuralNetworkModel:
 
     def __init__(self):
         self.model = None
-        # self.model = keras.models.Sequential()
+        self.info = None
+        self.activation_function_enum = {
+            "RELU": keras.activations.relu,
+            "Sigmoid": keras.activations.sigmoid,
+            "ELU": keras.activations.elu,
+            "Tangh": keras.activations.tanh,
+            "Softmax": keras.activations.softmax,
+            '': None
+        }
+        self.initializer_func_enum = {
+            "Zeros": keras.initializers.Zeros,
+            "Ones": keras.initializers.Ones,
+            "RandomNormal": keras.initializers.RandomNormal,
+            "RandomUniform": keras.initializers.RandomUniform,
+            "TruncatedNormal": keras.initializers.TruncatedNormal,
+            "Lecun_uniform": keras.initializers.lecun_uniform,
+            "He_normal": 'he_normal',
+            "Lecun_normal": 'lecun_normal',
+            "He_uniform": keras.initializers.he_uniform,
+            "SVD": self.SVD,
+            '': None
+        }
+
+    # Метод для обучения ИНН
+    def train_ANN(self):
+        if self.model is None:
+            self.__set_layer_params__()
+        self.info = self.__learn_model__()
+        return self.info
+
+    def __set_layer_params__(self):
+        self.model = keras.models.Sequential()
+        i = 1
+        self.model.add(keras.layers.Input(self.inputArray.shape[1]))
+        while i != self.layer_count:
+            self.model.add(keras.layers.Dense(self.neuron_in_layers[i], activation=self.activation_function[i],
+                                              kernel_initializer=self.kernel_initializer_func[i]))
+            i = i + 1
+
+    def __learn_model__(self):
+        self.model.compile(loss=self.loss, optimizer=self.optimizer, metrics=self.metrics)
+        info = self.model.fit(self.inputArray, self.realClass, epochs=self.epochs, validation_split=0.1, callbacks=[self.after_epochs_end_callback])
+        return info
 
     # Собственная функция для инициализации весов
     def SVD(self, shape, dtype=None):
-        array_of_classes = list()  # Что-то вроде массива массивов в,
-        # котором первый элемент включает в себя объекты "первого" класса
-        class_val = list()  # Реальные значения классов 0,1,2,....
-        class_val.append(self.realClass[0])
+        class_array = list()
+        real_class_value = self.__class_finder__()
+        clustering_classes = list()
+        self.__classification_algorithm__(class_array, real_class_value)
+        for i in range(np.size(real_class_value)):
+            clustering_classes.append(self.__clustering__(data=class_array[i]))
+        output_massive = list()
+        for i in range(np.shape(self.inputArray)[1]):
+            massive = list()
+            for j in range(np.size(real_class_value)):
+                massive += clustering_classes[j][i]
+            output_massive.append(massive)
+        return output_massive
+
+    def __class_finder__(self):
+        real_class_value = list()
+        real_class_value.append(self.realClass[0])
         # Обходим весь массив реальных классов и выбираем из них разные
         # если элемент отличается от нулевого добавляем в список классов, начинаем поиск нового, и т.д.
         for i in range(np.size(self.realClass)):
-            for j in range(np.size(class_val)):
-                if self.realClass[i] in class_val:
+            for j in range(np.size(real_class_value)):
+                if self.realClass[i] in real_class_value:
                     pass
                 else:
-                    class_val.append(self.realClass[i])
-        sorted(class_val)
-        # Разделяем весь набор данный по соответствующим классам
-        for i in range(np.size(class_val)):  # Количество классов пока не известно и передавать в качесве параметра функции нельзя
-            array_of_classes.append(list())
-            #    array_of_classes[i] = list()
-            for j in range(np.size(self.realClass)):
-                if self.realClass[j] == class_val[i]:
-                    array_of_classes[i].append(self.inputArray[j])
-        clustering_classes = list()
-        for i in range(np.size(class_val)):
-            clustering_classes.append(self.__clustering__(data=array_of_classes[i]))
-        output_massive = list()
-        # Все еще не избавился от зависимости трех классов
-        for x1, x2, x3 in zip(clustering_classes[0], clustering_classes[1], clustering_classes[2]):
-            output_massive.append(x1 + x2 + x3)
-            print(x1 + x2 + x3)
-        return output_massive
+                    real_class_value.append(self.realClass[i])
+        sorted(real_class_value)
+        return real_class_value
 
-    def __clustering__(self,data):
+    def __classification_algorithm__(self, array_of_classes, real_class_value):
+        # Разделяем весь набор данный по соответствующим классам
+        for i in range(np.size(real_class_value)):
+            array_of_classes.append(list())
+            for j in range(np.size(self.realClass)):
+                if self.realClass[j] == real_class_value[i]:
+                    array_of_classes[i].append(self.inputArray[j])
+
+    def __clustering__(self, data):
         mass1 = list()
         mass2 = list()
         mass3 = list()
@@ -90,6 +138,14 @@ class NeuralNetworkModel:
         weights7, u, v = svd(mass7)
         weights8, u, v = svd(mass8)
 
+        # weights1 = 2 * ((weights1 - min(weights1)) / (max(weights1) - min(weights1))) - 1
+        # weights2 = 2 * ((weights2 - min(weights2)) / (max(weights2) - min(weights2))) - 1
+        # weights3 = 2 * ((weights3 - min(weights3)) / (max(weights3) - min(weights3))) - 1
+        # weights4 = 2 * ((weights4 - min(weights4)) / (max(weights4) - min(weights4))) - 1
+        # weights5 = 2 * ((weights5 - min(weights5)) / (max(weights5) - min(weights5))) - 1
+        # weights6 = 2 * ((weights6 - min(weights6)) / (max(weights6) - min(weights6))) - 1
+        # weights7 = 2 * ((weights7 - min(weights7)) / (max(weights7) - min(weights7))) - 1
+        # weights8 = 2 * ((weights8 - min(weights8)) / (max(weights8) - min(weights8))) - 1
         weights1 = (weights1 / max(weights1) - 0.5) / 0.5
         weights2 = (weights2 / max(weights2) - 0.5) / 0.5
         weights3 = (weights3 / max(weights3) - 0.5) / 0.5
@@ -106,62 +162,79 @@ class NeuralNetworkModel:
                  np.float(x8)])
         return out
 
-    def setParams(self, layer_count, neuron_counter=[1], activation_function=["sigmoid"],
-                  kernel_init=["random_uniform"]):
-        self.activation_enum = {
-            "RELU" : keras.activations.relu,
-            "Sigmoid" : keras.activations.sigmoid,
-            "ELU" : keras.activations.elu,
-            "Tangh" : keras.activations.tanh,
-            "Softmax" : keras.activations.softmax,
-            '': None
-        }
-        self.init_enum = {
-            "Zeros": keras.initializers.Zeros,
-            "Ones": keras.initializers.Ones,
-            "RandomNormal": keras.initializers.RandomNormal,
-            "RandomUniform": keras.initializers.RandomUniform,
-            "TruncatedNormal": keras.initializers.TruncatedNormal,
-            "Lecun_uniform": keras.initializers.lecun_uniform,
-            "He_normal": 'he_normal',
-            "Lecun_normal": keras.initializers.lecun_normal,
-            "He_uniform": keras.initializers.he_uniform,
-            "SVD": self.SVD,
-            '': None
-        }
-        self.__setLayer_count__(layer_count)
-        self.__setNeuron_counter__(neuron_counter)
-        self.__setKernel_init__(kernel_init)
-        self.__setActivationFunc__(activation_function)
-        # self.model = keras.models.Sequential()
-
-    def setDataset(self, inputArray, realClass):
+    def set_data_for_learning(self, inputArray, realClass):
         self.inputArray = inputArray[:70000]
         self.realClass = realClass[:70000]
         self.X_test = inputArray[70000:]
         self.y_test = realClass[70000:]
 
+    def set_train_config(self, train_config):
+        self.__setEpochs__(train_config.epochs)
+        self.__setLoss__(train_config.loss_func)
+        self.__setOptimizer__(train_config.optimizer)
+        self.__setMetrics__(train_config.metrics)
+
+    def __setEpochs__(self, epoch):
+        self.epochs = epoch
+        # try:
+        #     if epoch > 0:
+        #         self.epochs = epoch
+        #     else:
+        #         raise ValueError(epoch)
+        # except ValueError as error:
+        #     print("Не верное количество эпох:", error, " количество эпох, должно быть больше нуля.")
+
+    def __setLoss__(self, loss_func):
+        try:
+            if type(loss_func) == str:
+                self.loss = loss_func
+            else:
+                raise ValueError(loss_func)
+        except ValueError as error:
+            print("Неверно указанна функция потерь:", error)
+
+    def __setOptimizer__(self, optimizer):
+        try:
+            if type(optimizer) == str:
+                self.optimizer = optimizer
+            else:
+                raise ValueError(optimizer)
+        except ValueError as error:
+            print("Неверная функция активации:", error)
+
+    def __setMetrics__(self, metric):
+        # TODO Реализовать метод
+        self.metrics = metric
+
+    def set_ANN_params(self, layer_count, neuron_counter=[1], activation_function=["sigmoid"],
+                       kernel_init=["random_uniform"]):
+        self.__setLayer_count__(layer_count)
+        self.__set_neuron_in_layers__(neuron_counter)
+        self.__set_kernel_initializer__(kernel_init)
+        self.__setActivationFunc__(activation_function)
+
     def __setLayer_count__(self, layer_count):
         if layer_count > 0:
             self.layer_count = layer_count
         else:
-            # TODO реализовать какоето событие при неверном количестве слоев ИНС
-            print("Не верное количество слоев, пропробуйте еще")
+            raise ValueError("Не верное количество слоев.", layer_count, "Пропробуйте указать число больше 0.")
+        # except ValueError as error:
+        #     print("Не верное количество слоев:", error, ". Пропробуйте указать число больше 0.")
 
-    def __setNeuron_counter__(self, neuron_count):
-        counter = np.array(neuron_count, dtype=int)
+    def __set_neuron_in_layers__(self, neuron_count_in_layers):
+        counter = np.array(neuron_count_in_layers, dtype=int)
         if counter.size == self.layer_count:
-            self.neuron_counter = counter
+            self.neuron_in_layers = counter
         else:
-            # TODO Реализовать ошибку инициализации количества нейронов в сети
-            print("Error value.")
+            raise ValueError("Неверно указано колличество слоев в сети:", neuron_count_in_layers,
+                             ". Количество слоев должно совпадать с указынным.")
 
-    def __setKernel_init__(self, kernel_init):
+    def __set_kernel_initializer__(self, kernel_init):
         kernel = np.array(kernel_init, dtype=str)
-        self.kernel_init = []
+        self.kernel_initializer_func = []
         for init in kernel:
             try:
-                self.kernel_init.append(self.init_enum[init])
+                self.kernel_initializer_func.append(self.initializer_func_enum[init])
             except KeyError as e:
                 # можно также присвоить значение по умолчанию вместо бросания исключения
                 raise ValueError('Undefined unit: {}'.format(e.args[0]))
@@ -171,40 +244,10 @@ class NeuralNetworkModel:
         self.activation_function = []
         for func in func_array:
             try:
-                self.activation_function.append(self.activation_enum[func])
+                self.activation_function.append(self.activation_function_enum[func])
             except KeyError as e:
                 # можно также присвоить значение по умолчанию вместо бросания исключения
-                raise ValueError('Undefined unit: {}'.format(e.args[0]))
-        # if func_array.size == self.layer_count :
-        #     self.activation_function = func_array
-        # else:
-        #     #TODO
-        #     print("Error value")
-
-    def __setEpochs__(self, epoch):
-        if epoch > 0:
-            self.epochs = epoch
-        else:
-            # TODO реализовать какоето событие при неверном количестве слоев ИНС
-            print("Не верное количество слоев, пропробуйте еще")
-
-    def __setLoss__(self, loss_func):
-        if type(loss_func) == str:
-            self.loss = loss_func
-        else:
-            # TODO
-            print("Error loss func")
-
-    def __setOptimizer__(self, optimizer):
-        if type(optimizer) == str:
-            self.optimizer = optimizer
-        else:
-            # TODO
-            print("Error optimize func")
-
-    def __setMetrics__(self, metric):
-        # TODO Реализовать метод
-        self.metrics = metric
+                raise ValueError('Неверно указана функция активации: {}'.format(e.args[0]))
 
     def get_history(self):
         return [self.info.history['loss'], self.info.history['accuracy']]
@@ -214,38 +257,10 @@ class NeuralNetworkModel:
         print(data)
         return data
 
-    # Метод для обучения нейронки
-    def trainNeuralNetwork(self):
-        # Плохой вариант реализации добавдения первого слоя
-        # activation=[None,keras.activations.relu,keras.activations.softmax]
-        if self.model is None:
-            self.model = keras.models.Sequential()
-            i = 1
-            self.model.add(keras.layers.Input(
-                self.inputArray.shape[1]))  # вот это клевый будет вариант, если не задано количество входных нейронов
-            while i != self.layer_count:
-                self.model.add(keras.layers.Dense(self.neuron_counter[i], activation=self.activation_function[i],
-                                                  kernel_initializer=self.kernel_init[i]))
-                i = i + 1
-            # Незнаю тут врядли можно что придумать просто задаю значения параметров по факту
-            self.model.compile(loss=self.loss, optimizer=self.optimizer, metrics=self.metrics)
-            self.info = self.model.fit(self.inputArray, self.realClass, epochs=self.epochs,
-                                       validation_split=0.1, callbacks=[self.after_epochs_end_callback])
-        else:
-            self.model.compile(loss=self.loss, optimizer=self.optimizer, metrics=self.metrics)
-            self.info = self.model.fit(self.inputArray, self.realClass, epochs=self.epochs,
-                                       validation_split=0.1, callbacks=[self.after_epochs_end_callback])
-        return self.info
-
-    def setTrainConfig(self, train_config):
-        self.__setEpochs__(train_config.epochs)
-        self.__setLoss__(train_config.loss_func)
-        self.__setOptimizer__(train_config.optimizer)
-        self.__setMetrics__(train_config.metrics)
-
     def save_model(self, path=None):
         self.model.save(path)
 
     def load_model(self, path=None):
         self.model = keras.models.load_model(path)
+
 
